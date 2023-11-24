@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>DaiT Blog</title>
+  <icon>https://chenluntian.github.io/favicon.png</icon>
+  <subtitle>All at sea.</subtitle>
+  <link href="https://chenluntian.github.io/atom/atom.xml" rel="self"/>
+  
+  <link href="https://chenluntian.github.io/"/>
+  <updated>2023-11-24T14:38:51.988Z</updated>
+  <id>https://chenluntian.github.io/</id>
+  
+  <author>
+    <name>DaiT</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hello-word</title>
+    <link href="https://chenluntian.github.io/posts/de5a874b"/>
+    <id>https://chenluntian.github.io/posts/de5a874b</id>
+    <published>2023-11-24T10:44:10.785Z</published>
+    <updated>2023-11-24T14:38:51.988Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>pcigo-command设置lskypro</title>
+    <link href="https://chenluntian.github.io/posts/4ddba583"/>
+    <id>https://chenluntian.github.io/posts/4ddba583</id>
+    <published>2023-11-24T12:34:21.566Z</published>
+    <updated>2023-11-24T14:38:50.715Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;pcigo-command设置lskypro&quot;&gt;&lt;a href=&quot;#pcigo-command设置lskypro&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>简单串口编写</title>
+    <link href="https://chenluntian.github.io/posts/e1c9b379"/>
+    <id>https://chenluntian.github.io/posts/e1c9b379</id>
+    <published>2023-11-24T12:34:39.058Z</published>
+    <updated>2023-11-24T14:38:39.303Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;简单串口编写&quot;&gt;&lt;a href=&quot;#简单串口编写&quot; class=&quot;headerlink&quot; title=&quot;简单串口编写&quot;&gt;&lt;/a&gt;简单串口编写&lt;/h1&gt;&lt;h2 id=&quot;1-ui-界面的创建&quot;&gt;&lt;a href=&quot;#1-ui-界面的创建&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>

@@ -1,0 +1,1004 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="DaiT"><meta name="copyright" content="DaiT"><meta name="generator" content="Hexo 6.3.0"><meta name="theme" content="hexo-theme-yun"><title>简单串口编写 | DaiT Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><script src="https://fastly.jsdelivr.net/npm/pjax@latest/pjax.min.js" defer></script><script src="/js/pjax.js" defer type="module"></script><script src="https://fastly.jsdelivr.net/npm/vue@2.6.14"></script><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"chenluntian.github.io","root":"/","title":"业精于勤 荒于奚","version":"1.10.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"algolia":{"hits":{"per_page":8}},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/atom/atom.xml" title="DaiT Blog" type="application/atom+xml"><link rel="stylesheet" href="/../css/custom.css"><link rel="stylesheet" href="/../images/favicon.ico"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1LL0D86CY9"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1LL0D86CY9');
+}</script><script>//- only for pjax
+function sendPageView() {
+  if (CONFIG.hostname !== location.hostname) return;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('event', 'page_view', {
+    page_path: encodeURIComponent(location.pathname),
+  })
+}
+document.addEventListener("pjax:success", sendPageView);</script><script data-ad-client="ca-pub-2245427233262012" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="简单串口编写1.ui 界面的创建打开Qt新建一个工程   工程命名为 **QtSerial** ，选择路径时注意路径**不可出现中文名**。  这里选择默认，点击**下一步**  这里基类选择 QWidget,修改类名为**MainWidget**，点击**下一步**  这里选择默认，点击**下一步**  编译套件随便选择，后面可以随时进行更改，点击**下一步**  这里选择默认，点击**完成**">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单串口编写">
+<meta property="og:url" content="https://chenluntian.github.io/posts/e1c9b379">
+<meta property="og:site_name" content="DaiT Blog">
+<meta property="og:description" content="简单串口编写1.ui 界面的创建打开Qt新建一个工程   工程命名为 **QtSerial** ，选择路径时注意路径**不可出现中文名**。  这里选择默认，点击**下一步**  这里基类选择 QWidget,修改类名为**MainWidget**，点击**下一步**  这里选择默认，点击**下一步**  编译套件随便选择，后面可以随时进行更改，点击**下一步**  这里选择默认，点击**完成**">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f775209e.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f113052b.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f82894e9.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f87c2fec.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f8e5403e.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f92bac91.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f96741cf.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f9ade3a1.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f9f3ccfb.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fa4131d1.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fabf1716.gif">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fb1617b0.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fb621564.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fbc38d92.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fc30d31d.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fc7861c4.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fcd4a622.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fd1c94f8.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fd4b6502.gif">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fd9e1f61.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fdf9558c.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fe45a532.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fe8cca0f.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fedbbb21.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5ff1e403a.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5ff6a6b1d.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5ffa6976f.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f60000f066.gif">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fe8cca0f.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f5fc7861c4.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f600fd7459.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f60192b5c5.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f601e4ea99.gif">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f6023c6f7c.png">
+<meta property="og:image" content="https://img.daitcc.top:8090/i/2023/11/655f60285cf0e.png">
+<meta property="article:published_time" content="2023-11-24T12:34:39.058Z">
+<meta property="article:modified_time" content="2023-11-24T14:38:39.303Z">
+<meta property="article:author" content="DaiT">
+<meta property="article:tag" content="YunYouJun">
+<meta property="article:tag" content="Blog">
+<meta property="article:tag" content="DaiT">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="业精于勤 荒于奚">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.daitcc.top:8090/i/2023/11/655f5f775209e.png"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="DaiT"><img width="96" loading="lazy" src="/../images/avatar.jpg" alt="DaiT"><span class="site-author-status" title="Looking for dawn.">🌑</span></a><div class="site-author-name"><a href="/about/">DaiT</a></div><span class="site-name">DaiT Blog</span><sub class="site-subtitle">All at sea.</sub><div class="site-description">希望能成为一个有趣的人</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">0</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">0</span></a></div><a class="site-state-item hty-icon-button" href="/about/#comment" title="留言板"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:clipboard-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="../atom/atom.xml" title="RSS" target="_blank" style="color:orange"><span class="icon iconify" data-icon="ri:rss-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/chenlunTian" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="../images/white-qrcode-and-search.png" title="微信公众号" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-2-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:354769733@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="喜欢的女孩子" style="color:hotpink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E4%B8%B2%E5%8F%A3%E7%BC%96%E5%86%99"><span class="toc-number">1.</span> <span class="toc-text">简单串口编写</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-ui-%E7%95%8C%E9%9D%A2%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">1.1.</span> <span class="toc-text">1.ui 界面的创建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E7%95%8C%E9%9D%A2%E5%B1%95%E7%A4%BA%E5%9B%BE"><span class="toc-number">1.1.1.</span> <span class="toc-text">最终界面展示图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%95%8C%E9%9D%A2%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA%E5%9B%BE-Windows-%E5%B9%B3%E5%8F%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">界面效果展示图(Windows 平台)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-QSerialPort%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.2.</span> <span class="toc-text">2.QSerialPort模块介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#QT%E7%9A%84QtSerialPort%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.1.</span> <span class="toc-text">QT的QtSerialPort模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QtSerialPort%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">QtSerialPort模块使用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%B2%E5%8F%A3%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">配置串口参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.4.</span> <span class="toc-text">配置发送和接收函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.5.</span> <span class="toc-text">配置编码格式函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%BA%BF%E7%A8%8B%E7%B1%BB%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%B7%BB%E5%8A%A0%E5%92%8CUI%E7%95%8C%E9%9D%A2%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">3.线程类对象的添加和UI界面的参数设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%BB%BB%E5%8A%A1%E7%B1%BB%E5%AF%B9%E8%B1%A1%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%B1%BB%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.1.</span> <span class="toc-text">添加任务类对象和线程类对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96ui%E7%95%8C%E9%9D%A2%E5%8F%82%E6%95%B0"><span class="toc-number">1.3.2.</span> <span class="toc-text">初始化ui界面参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8QSerialPortInfo%E5%BE%97%E5%88%B0%E4%B8%B2%E5%8F%A3%E5%8F%B7"><span class="toc-number">1.3.3.</span> <span class="toc-text">利用QSerialPortInfo得到串口号</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%85%8D%E7%BD%AEUI%E7%95%8C%E9%9D%A2%E7%9A%84%E4%B8%B2%E5%8F%A3%E6%89%93%E5%BC%80%E5%92%8C%E5%85%B3%E9%97%AD"><span class="toc-number">1.4.</span> <span class="toc-text">4.配置UI界面的串口打开和关闭</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E4%B8%B2%E5%8F%A3%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E6%95%B0%E7%BB%84"><span class="toc-number">1.4.1.</span> <span class="toc-text">设置串口参数配置数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%89%93%E5%BC%80%E4%B8%B2%E5%8F%A3%E5%92%8C%E5%85%B3%E9%97%AD%E4%B8%B2%E5%8F%A3%E6%8C%89%E9%92%AE"><span class="toc-number">1.4.2.</span> <span class="toc-text">设置打开串口和关闭串口按钮</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://chenluntian.github.io/posts/e1c9b379"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="DaiT"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="DaiT Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">简单串口编写</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2023-11-24 20:34:39" itemprop="dateCreated datePublished" datetime="2023-11-24T20:34:39+08:00">2023-11-24</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">7k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">31m</span></span></span><div class="post-classify"></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="简单串口编写"><a href="#简单串口编写" class="headerlink" title="简单串口编写"></a>简单串口编写</h1><h2 id="1-ui-界面的创建"><a href="#1-ui-界面的创建" class="headerlink" title="1.ui 界面的创建"></a>1.ui 界面的创建</h2><p>打开<strong>Qt</strong>新建一个工程</p>
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f775209e.png"/ loading="lazy">
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f113052b.png"/ loading="lazy">
+工程命名为 **QtSerial** ，选择路径时注意路径**不可出现中文名**。
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f82894e9.png"/ loading="lazy">
+这里选择默认，点击**下一步**
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f87c2fec.png"/ loading="lazy">
+这里基类选择 QWidget,修改类名为**MainWidget**，点击**下一步**
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f8e5403e.png"/ loading="lazy">
+这里选择默认，点击**下一步**
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f92bac91.png"/ loading="lazy">
+编译套件随便选择，后面可以随时进行更改，点击**下一步**
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f96741cf.png"/ loading="lazy">
+这里选择默认，点击**完成**
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5f9ade3a1.png"/ loading="lazy">
+
+<p>进入工程，双击<strong>MainWidget.ui</strong>编辑ui文件（这里我们通过Qt的UI界面编辑器来设计ui界面，不以纯代码的形式来进行界面的设计。）<br><img src="https://img.daitcc.top:8090/i/2023/11/655f5f9f3ccfb.png"/ loading="lazy"><br>拖拽合适的控件完善布局。</p>
+<ul>
+<li>拖拽<strong>Tab Widget</strong>，并修改第 1 页为“<strong>串口助手</strong>”，第 2 页为“<strong>关于</strong>”<br><img src="https://img.daitcc.top:8090/i/2023/11/655f5fa4131d1.png" alt="image-20210923213127836" loading="lazy"></li>
+<li>操作方法如下（动图展示）<br><img src="https://img.daitcc.top:8090/i/2023/11/655f5fabf1716.gif" alt="1" loading="lazy"></li>
+</ul>
+<p>完善其他控件的拖拽，完整 UI 文件可以到此处下载<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1szEDoUIcotu8rehDhAvfvg" title="提取码：h7po">提取码：h7po</a>。</p>
+<h3 id="最终界面展示图"><a href="#最终界面展示图" class="headerlink" title="最终界面展示图"></a>最终界面展示图</h3><p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fb1617b0.png" alt="image-20211024114809591" loading="lazy"></p>
+<h3 id="界面效果展示图-Windows-平台"><a href="#界面效果展示图-Windows-平台" class="headerlink" title="界面效果展示图(Windows 平台)"></a>界面效果展示图(Windows 平台)</h3><p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fb621564.png" alt="image-20211024114925843" loading="lazy"></p>
+<h2 id="2-QSerialPort模块介绍"><a href="#2-QSerialPort模块介绍" class="headerlink" title="2.QSerialPort模块介绍"></a>2.QSerialPort模块介绍</h2><h3 id="QT的QtSerialPort模块"><a href="#QT的QtSerialPort模块" class="headerlink" title="QT的QtSerialPort模块"></a>QT的QtSerialPort模块</h3><p>Qt中提供了两个C++类，分别是<strong>QSerialPort</strong> 和<strong>QSerialPortInfo</strong>。</p>
+<p>它们功能如下：</p>
+<p> <strong>QSerialPort</strong> ：提供了操作串口的各种接口。</p>
+<p> <strong>QSerialPortInfo</strong> ：可以提供计算机中可用串口的各种信息。</p>
+<h3 id="QtSerialPort模块使用方法"><a href="#QtSerialPort模块使用方法" class="headerlink" title="QtSerialPort模块使用方法"></a>QtSerialPort模块使用方法</h3><p> 首先，需要在pro文件中增加如下内容：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">QT +&#x3D; serialport    </code></pre>
+
+<p>然后执行<strong>qmake</strong>，如果未执行 后面添加头文件时会报错。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fbc38d92.png" alt="image-20211005013634387" loading="lazy"></p>
+<p>给项目添加新的**C++**类，</p>
+<img src="https://img.daitcc.top:8090/i/2023/11/655f5fc30d31d.png" alt="image-20211027145302605" style="zoom:50%; "  / loading="lazy">
+
+<p>选择<strong>C++ Class</strong></p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fc7861c4.png" loading="lazy"></p>
+<p> 取名<strong>Serial</strong>，点击<strong>下一步</strong>即可生成对应的文件<img src="https://img.daitcc.top:8090/i/2023/11/655f5fcd4a622.png" alt="image-20211005014205307" loading="lazy"></p>
+<p>在生成的<strong>serial.h</strong>中进行如下操作</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">#ifndef SERIAL_H
+#define SERIAL_H
+
+#include &lt;QObject&gt;
+#include &lt;QSerialPort&gt;       &#x2F;&#x2F;添加串口类的头文件
+#include &lt;QSerialPortInfo&gt;	 &#x2F;&#x2F;添加串口信息的头文件
+
+class Serial : public QObject
+&#123;
+    Q_OBJECT
+public:
+    explicit Serial(QObject *parent &#x3D; nullptr);
+    ~Serial(void);			&#x2F;&#x2F;添加析构函数
+    void SerialOpen();		&#x2F;&#x2F;添加打开串口函数
+    void SerialClose();		&#x2F;&#x2F;添加关闭串口函数
+private:
+    QSerialPort* MySerial;  &#x2F;&#x2F;添加串口类成员
+
+signals:
+    void SetInfo(QString info);
+    void isnoSerialOpen();
+&#125;;
+
+#endif &#x2F;&#x2F; SERIAL_H
+
+</code></pre>
+
+<p>分别将光标置于函数后面 按下快捷键 <kbd>alt</kbd> + <kbd>enter</kbd> </p>
+<pre class="language-c++" data-language="c++"><code class="language-c++">~Serial(void);			&#x2F;&#x2F;添加析构函数
+void SerialOpen();		&#x2F;&#x2F;添加打开串口函数
+void SerialClose();		&#x2F;&#x2F;添加关闭串口函数</code></pre>
+
+<p>出现以下图片时 <strong>回车</strong> 即可在 <strong>cpp</strong> 文件中定义函数。<br><img src="https://img.daitcc.top:8090/i/2023/11/655f5fd1c94f8.png" alt="image-20211024112606270" loading="lazy"></p>
+<p>动图展示。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fd4b6502.gif" loading="lazy"></p>
+<blockquote>
+<p>~Serial(void);  用来<strong>delete</strong> 之后程序中 <strong>new</strong>出来的变量</p>
+<p>void SerialOpen();和 void SerialClose();则是用来进行打开串口的操作。</p>
+</blockquote>
+<p>首先在 <strong>cpp</strong> 文件中 对<strong>MySerial</strong>进行实例化。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fd9e1f61.png" alt="image-20211027151715679" loading="lazy"></p>
+<p>然后，鼠标放在<strong>MySerial</strong>上按下快捷键<kbd>F1</kbd>,打开<strong>QSerialPort</strong>的帮助文档。找到<strong>Public Functions</strong></p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fdf9558c.png" alt="image-20211027152623327" loading="lazy"></p>
+<p>打开<strong>Detailed Description</strong><br><img src="https://img.daitcc.top:8090/i/2023/11/655f5fe45a532.png" alt="image-20211027153753566" loading="lazy"></p>
+<p>从帮助文档中可以看出来，我们需要对串口进行的一些配置。</p>
+<h3 id="配置串口参数"><a href="#配置串口参数" class="headerlink" title="配置串口参数"></a>配置串口参数</h3><p>操作步骤如下：</p>
+<blockquote>
+<p>1.首先需要设置要打开的串口名，这里可以通过**setPortName()<strong>或者</strong>setPort()**进行配置</p>
+<p>2.然后通过使用open()函数以 read-only (r&#x2F;o), write-only (w&#x2F;o), or read-write (r&#x2F;w) 模式之一打开串口</p>
+<p>3.然后，检测串口是否被打开 (且没有其他的进程或者线程打开串口，如果有就关闭串口在重新打开)</p>
+<p>4.最后，配置串口参数如配置串口名，波特率，数据位，校验位，停止位和流控位</p>
+</blockquote>
+<p>配置函数如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void setPortName(const QString &amp;name) 
+bool setBaudRate(qint32 baudRate, QSerialPort::Directions directions &#x3D; AllDirections)
+bool setDataBits(QSerialPort::DataBits dataBits)
+bool setParity(QSerialPort::Parity parity)
+bool setStopBits(QSerialPort::StopBits stopBits)
+bool setFlowControl(QSerialPort::FlowControl flowControl)</code></pre>
+
+<p>首先，我们需要<strong>QString</strong>和<strong>qint32</strong>这两个类型的<strong>name</strong>参数和<strong>baudRate</strong>参数，这是通过<strong>ui</strong>界面的<strong>Qcombobox</strong>选项得到的。因为使用<strong>多线程</strong>的原因，不能直接调用，所以，这里通过构建<strong>结构体</strong>，通过传递<strong>结构体</strong>来传递参数。</p>
+<p>鼠标右键点击工程，添加一个新的<strong>cpp</strong>头文件</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fe8cca0f.png" loading="lazy"></p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fedbbb21.png" alt="image-20211027193012335" loading="lazy"></p>
+<p>设置头文件名称为 <strong>SerialInfo.h</strong> ，点击<strong>下一步</strong>，完成。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5ff1e403a.png" alt="image-20211027193154402" loading="lazy"></p>
+<p>添加 <strong>SerialInfo.h</strong>的内容如下。</p>
+<pre class="language-c" data-language="c"><code class="language-c">#ifndef SERIALINFO_H
+#define SERIALINFO_H
+#include &lt;QVector&gt;
+#include &lt;QMetaType&gt;
+
+typedef struct SerialInfos         &#x2F;&#x2F;串口配置信息
+&#123;
+     QString comName;    &#x2F;&#x2F;串口名称
+     qint32 baudRate;     &#x2F;&#x2F;波特率
+     qint32 dataBits;     &#x2F;&#x2F;数据位
+     qint32 parity;       &#x2F;&#x2F;校验位
+     qint32 stopBits;     &#x2F;&#x2F;停止位
+     qint32 flowControl;  &#x2F;&#x2F;流控位
+     qint32 Encode;       &#x2F;&#x2F;编码格式
+
+&#125;Sinfo;
+
+
+&#x2F;&#x2F;通过Q_DECLARE_METATYPE声明后，就可以让自定义的类型设置到QVariant。
+Q_DECLARE_METATYPE(Sinfo);
+
+#endif &#x2F;&#x2F; SERIALINFO_H
+</code></pre>
+
+<p>在<strong>serial.h</strong>中添加头文件 </p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">#include &quot;SerialInfo.h&quot;</code></pre>
+
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5ff6a6b1d.png" alt="image-20211027194025777" loading="lazy"></p>
+<p>并添加私有成员</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">private:
+    QSerialPort* MySerial;
+    Sinfo *info&#x3D;nullptr;    &#x2F;&#x2F;串口配置
+	QString InfoSet;        &#x2F;&#x2F;存储串口配置</code></pre>
+
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5ffa6976f.png" alt="image-20211027194229817" loading="lazy"></p>
+<p>修改后的<strong>serial.h</strong>内容如下</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">#ifndef SERIAL_H
+#define SERIAL_H
+
+#include &lt;QObject&gt;
+#include &lt;QSerialPort&gt;       &#x2F;&#x2F;添加串口类的头文件
+#include &lt;QSerialPortInfo&gt;	 &#x2F;&#x2F;添加串口信息的头文件
+#include &quot;SerialInfo.h&quot;
+
+class Serial : public QObject
+&#123;
+    Q_OBJECT
+public:
+    explicit Serial(QObject *parent &#x3D; nullptr);
+    ~Serial(void);			&#x2F;&#x2F;添加析构函数
+    void SerialOpen();		&#x2F;&#x2F;添加打开串口函数
+    void SerialClose();		&#x2F;&#x2F;添加关闭串口函数
+private:
+    QSerialPort* MySerial;  &#x2F;&#x2F;添加串口类成员
+    Sinfo *info&#x3D;nullptr;    &#x2F;&#x2F;串口配置
+    QString InfoSet;        &#x2F;&#x2F;存储串口配置
+signals:
+    void SetInfo(QString info); &#x2F;&#x2F;发送串口配置信号
+    void isnoSerialOpen();	&#x2F;&#x2F;发送串口打开失败信号
+&#125;;
+
+#endif &#x2F;&#x2F; SERIAL_H
+</code></pre>
+
+<p>接下来在SerialOpen中操作。</p>
+<p>首先判断串口是否打开，如果已经打开就关闭。这里调用SerialClose()（具体内容见下面SerialClose部分）</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">this-&gt;SerialClose();</code></pre>
+
+<p>然后设置串口名</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">MySerial-&gt;setPortName(QString(info-&gt;comName));</code></pre>
+
+<p>然后设置串口打开模式，R&#x2F;W模式，如果设置失败发送错误信息，然后返回。</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">if(!MySerial-&gt;open(QIODevice::ReadWrite))&#x2F;&#x2F;用ReadWrite 的模式尝试打开串口
+    &#123;
+        emit isnoSerialOpen();  &#x2F;&#x2F;发送打开失败的标志
+        return;
+    &#125;</code></pre>
+
+<blockquote>
+<p>其中isnoSerialOpen()为设置的发送打开失败信号。</p>
+</blockquote>
+<p>然后设置波特率，波特率通过<strong>info-&gt;baudRate</strong>设置</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">MySerial-&gt;setBaudRate(qint32(info-&gt;baudRate));</code></pre>
+
+<p>设置数据位，这里通过switch函数设置，其中setDataBits();中的参数通过使用<kbd>F1</kbd>查看，具体操作步骤如下。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f60000f066.gif" loading="lazy"></p>
+<p>使用同样的方法设置检验位、停止位和流控位。</p>
+<p>在**SerialOpen()**中实现上述操作步骤，具体代码如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void Serial::SerialOpen()
+&#123;
+    this-&gt;SerialClose();
+    MySerial-&gt;setPortName(QString(info-&gt;comName));
+    InfoSet&#x3D;QString::fromLocal8Bit(&quot;串口:&quot;); &#x2F;&#x2F;InfoSet存储串口设置信息，发送给mainWidget
+    InfoSet.append(QString(info-&gt;comName));
+    if(!MySerial-&gt;open(QIODevice::ReadWrite))&#x2F;&#x2F;用ReadWrite 的模式尝试打开串口
+    &#123;
+        emit isnoSerialOpen();  &#x2F;&#x2F;发送打开失败的标志
+        return;
+    &#125;
+    &#x2F;&#x2F;设置波特率
+    bool Bflag &#x3D; MySerial-&gt;setBaudRate(qint32(info-&gt;baudRate));
+        if(Bflag)&#123;
+            InfoSet.append(QString::fromLocal8Bit(&quot; 波特率:&quot;));
+            &#x2F;&#x2F;第一个参数为int变量，第二个参数10表示转换为10进制数
+            QString baudRateinfo &#x3D; QString::number(int(info-&gt;baudRate),10);
+            InfoSet.append(baudRateinfo);
+        &#125;
+        else&#123;
+            InfoSet.QString::fromLocal8Bit(&quot;波特率:Unknown&quot;);
+        &#125;;
+        &#x2F;&#x2F;设置数据位
+        switch (info-&gt;dataBits) &#123;
+                case 0:
+                       MySerial-&gt;setDataBits(QSerialPort::Data5);
+                       InfoSet.append(QString::fromLocal8Bit(&quot; 数据位:5&quot;));
+                       break;
+                case 1:
+                       MySerial-&gt;setDataBits(QSerialPort::Data6);
+                       InfoSet.append(QString::fromLocal8Bit(&quot; 数据位:6&quot;));
+                       break;
+                case 2:
+                       MySerial-&gt;setDataBits(QSerialPort::Data7);
+                       InfoSet.append(QString::fromLocal8Bit(&quot; 数据位:7&quot;));
+                       break;
+                case 3:
+                       MySerial-&gt;setDataBits(QSerialPort::Data8);
+                       InfoSet.append(QString::fromLocal8Bit(&quot; 数据位:8&quot;));
+                       break;
+                default:
+                        MySerial-&gt;setDataBits(QSerialPort::UnknownDataBits);
+                        InfoSet.append(QString::fromLocal8Bit(&quot; 数据位:Unknown&quot;));
+                        break;
+                &#125;
+        &#x2F;&#x2F;设置校验位
+        switch (info-&gt;parity) &#123;
+                case 0:
+                    MySerial-&gt;setParity(QSerialPort::EvenParity);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 校验位:Even&quot;));
+                    break;
+                case 1:
+                    MySerial-&gt;setParity(QSerialPort::MarkParity);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 校验位:Mark&quot;));
+                    break;
+                case 2:
+                    MySerial-&gt;setParity(QSerialPort::NoParity);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 校验位:None&quot;));
+                    break;
+                case 3:
+                    MySerial-&gt;setParity(QSerialPort::OddParity);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 校验位:Odd&quot;));
+                    break;
+                case 4:
+                    MySerial-&gt;setParity(QSerialPort::SpaceParity);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 校验位:Space&quot;));
+                    break;
+                default:
+                    MySerial-&gt;setParity(QSerialPort::UnknownParity);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 校验位:Unknown&quot;));
+                    break;
+                &#125;
+        &#x2F;&#x2F;设置停止位
+        switch (info-&gt;stopBits) &#123;
+                case 0:
+                    MySerial-&gt;setStopBits(QSerialPort::OneStop);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 停止位:1&quot;));
+                    break;
+                case 1:
+                    MySerial-&gt;setStopBits(QSerialPort::OneAndHalfStop);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 停止位:1.5&quot;));
+                    break;
+                case 2:
+                    MySerial-&gt;setStopBits(QSerialPort::TwoStop);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 停止位:2&quot;));
+                    break;
+                default:
+                    MySerial-&gt;setStopBits(QSerialPort::UnknownStopBits);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 停止位:Unknown&quot;));
+                    break;
+                &#125;
+        &#x2F;&#x2F;设置流控位
+        switch (info-&gt;flowControl) &#123;
+                case 0:
+                    MySerial-&gt;setFlowControl(QSerialPort::NoFlowControl);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 流控位:None&quot;));
+                    break;
+                case 1:
+                    MySerial-&gt;setFlowControl(QSerialPort::HardwareControl);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 流控位:Hardware&quot;));
+                    break;
+                case 2:
+                    MySerial-&gt;setFlowControl(QSerialPort::SoftwareControl);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 流控位:Software&quot;));
+                    break;
+                default:
+                    MySerial-&gt;setFlowControl(QSerialPort::UnknownFlowControl);
+                    InfoSet.append(QString::fromLocal8Bit(&quot; 流控位:Unknown&quot;));
+                    break;
+                &#125;
+        emit SetInfo(InfoSet);&#x2F;&#x2F;发送串口配置信号
+&#125;</code></pre>
+
+<p>添加**SerialClose()**函数。具体内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void Serial::SerialClose()
+&#123;
+    if(MySerial-&gt;isOpen())&#x2F;&#x2F;如果串口已经打开了 先给他关闭了
+    &#123;
+        MySerial-&gt;clear();
+        MySerial-&gt;close();
+    &#125;
+&#125;</code></pre>
+
+<blockquote>
+<p>添加接收串口配置参数函数。这个函数主要用从接收从ui界面处选择的串口参数，并保存在info中，前面提到了是通过结构体来传递参数的，因此构造函数时，要添加结构体的形参。</p>
+</blockquote>
+<p>在<strong>serial.h</strong>中添加公共函数*<em>void RecvSerialConfig(Sinfo <em>data);</em></em> 。</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">public:
+	void RecvSerialConfig(Sinfo *data);  &#x2F;&#x2F;接收串口配置参数函数</code></pre>
+
+<p>按下<kbd>alt</kbd>+<kbd>enter</kbd>，在<strong>serial.cpp</strong>中添加定义。</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void Serial::RecvSerialConfig(Sinfo *data)
+&#123;
+    if(info!&#x3D;nullptr)   &#x2F;&#x2F;删除原先内存空间
+    &#123;
+        delete info;
+    &#125;
+    this-&gt;info &#x3D; new Sinfo;&#x2F;&#x2F;防止内存泄漏,关闭时 delete info;
+    &#x2F;&#x2F;接收参数设置
+    this-&gt;info-&gt;Encode&#x3D;data-&gt;Encode;
+    this-&gt;info-&gt;baudRate&#x3D;data-&gt;baudRate;
+    this-&gt;info-&gt;comName&#x3D;data-&gt;comName;
+    this-&gt;info-&gt;dataBits&#x3D;data-&gt;dataBits;
+    this-&gt;info-&gt;flowControl&#x3D;data-&gt;flowControl;
+    this-&gt;info-&gt;parity&#x3D;data-&gt;parity;
+    this-&gt;info-&gt;stopBits&#x3D;data-&gt;stopBits;
+&#125;</code></pre>
+
+<blockquote>
+<p>这里要注意，申请内存空间时，结束后必须释放，不然容易导致内存泄漏。因此，需要在**~Serial(void);<strong>中添加</strong>delete info;**</p>
+</blockquote>
+<p>**~Serial(void);**函数如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">Serial::~Serial()
+&#123;
+    delete info;
+&#125;</code></pre>
+
+<h3 id="配置发送和接收函数"><a href="#配置发送和接收函数" class="headerlink" title="配置发送和接收函数"></a>配置发送和接收函数</h3><p>配置完打开和关闭函数后，这里要配置发送和接收函数</p>
+<p>在<strong>serial.h</strong>中添加公共函数<strong>void SendData(QByteArray data, bool hexflag);</strong> 和<strong>void RecvData();<strong>。添加信号</strong>void isRecvData(QByteArray);</strong></p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">public:
+    void SendData(QByteArray data, bool hexflag); &#x2F;&#x2F;发送数据
+    void RecvData(); &#x2F;&#x2F;接收数据
+signals:
+    void isRecvData(QByteArray); &#x2F;&#x2F;接收数据信号</code></pre>
+
+<p>按下<kbd>alt</kbd>+<kbd>enter</kbd>，在<strong>serial.cpp</strong>中添加定义。</p>
+<blockquote>
+<p>其中<strong>void SendData(QByteArray data, bool hexflag);</strong> 函数中，<strong>data</strong>为<strong>ui</strong>界面传递的数据，<strong>hexflag</strong>则为是否通过<strong>hex</strong>模式发送。</p>
+<p><strong>isRecvData(QByteArray);<strong>则是向</strong>ui</strong>传递串口接收的数据。</p>
+</blockquote>
+<p>具体函数内容为：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void Serial::SendData(QByteArray data, bool hexflag)
+&#123;
+    if(data.isEmpty())
+    &#123;
+        return;&#x2F;&#x2F;没有读取到数据就退出
+    &#125;
+    if(hexflag&#x3D;&#x3D;true)
+    &#123;   &#x2F;&#x2F;hex模式直接发送
+        MySerial-&gt;write(data);
+    &#125;
+    else&#123; &#x2F;&#x2F;判断编码格式在发送
+         data&#x3D;SetCodeType(data,info-&gt;Encode); &#x2F;&#x2F;先根据编码转换数据编码格式
+         MySerial-&gt;write(data);
+    &#125;
+&#125;
+
+void Serial::RecvData()
+&#123;
+    QByteArray info &#x3D; MySerial-&gt;readAll();
+    if(info.isEmpty())
+     &#123;
+       return ;&#x2F;&#x2F;没有读取到数据就退出
+     &#125;
+    emit isRecvData(info);
+&#125;</code></pre>
+
+<p>这里**SetCodeType();**函数为自己定义的设置数据编码格式函数。具体实现方式见 <strong>配置编码格式函数</strong> 。</p>
+<h3 id="配置编码格式函数"><a href="#配置编码格式函数" class="headerlink" title="配置编码格式函数"></a>配置编码格式函数</h3><p>给项目添加新的<strong>C++<strong>类，右击</strong>工程</strong>，选择**ADD NEW …**。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fe8cca0f.png" loading="lazy"></p>
+<p>选择<strong>C++ Class</strong></p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f5fc7861c4.png" loading="lazy"></p>
+<p>按照如下图选择，点击<strong>下一步</strong>，<strong>完成</strong>。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f600fd7459.png" loading="lazy"></p>
+<p>修改<strong>codetype.h</strong>内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">#ifndef CODETYPE_H
+#define CODETYPE_H
+
+#include &lt;QString&gt;
+#include &lt;QTextCodec&gt;
+
+&#x2F;&#x2F;编码格式列表
+typedef enum
+&#123;
+    ASCII &#x3D; 0,
+    Utf8,     &#x2F;&#x2F;Utf8编码格式
+    Utf16,    &#x2F;&#x2F;Utf16编码格式
+    GBK,  &#x2F;&#x2F;GBK编码格式、兼容GBK18030、GB2312
+    Big5,     &#x2F;&#x2F;Big5
+    ShiftJIS
+&#125;CodeType;
+&#x2F;&#x2F;设置编码格式
+QByteArray SetCodeType(QByteArray const &amp;data,qint32 control);
+&#x2F;&#x2F;解析编码格式
+QByteArray GetCodeType(QByteArray const &amp;data, qint32 control);
+#endif &#x2F;&#x2F; CODETYPE_H
+</code></pre>
+
+<p>修改<strong>codetype.cpp</strong>内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">#include &quot;codetype.h&quot;
+&#x2F;&#x2F;编码
+QByteArray SetCodeType(const QByteArray &amp;data, qint32 control)
+&#123;
+    QByteArray tmpData;
+    switch (control) &#123;
+        case ASCII: tmpData&#x3D;QTextCodec::codecForName(&quot;latin1&quot;)-&gt;fromUnicode(data);break;
+        case Utf8: tmpData&#x3D; QTextCodec::codecForName(&quot;UTF-8&quot;)-&gt;fromUnicode(data);break;
+        case Utf16: tmpData&#x3D; QTextCodec::codecForName(&quot;UTF-16&quot;)-&gt;fromUnicode(data);break;
+        case GBK: tmpData&#x3D; QTextCodec::codecForName(&quot;GBK&quot;)-&gt;fromUnicode(data);break;
+        case Big5: tmpData&#x3D; QTextCodec::codecForName(&quot;Big5&quot;)-&gt;fromUnicode(data);break;
+        case ShiftJIS: tmpData&#x3D; QTextCodec::codecForName(&quot;Shift-JIS&quot;)-&gt;fromUnicode(data);break;
+        default:;break;
+    &#125;
+    return tmpData;
+&#125;
+
+&#x2F;&#x2F;解码
+QByteArray GetCodeType(const QByteArray &amp;data, qint32 control)
+&#123;
+    QString tmpData;
+    switch (control) &#123;
+        case ASCII: tmpData&#x3D; QTextCodec::codecForName(&quot;latin1&quot;)-&gt;toUnicode(data);break;
+        case Utf8: tmpData&#x3D; QTextCodec::codecForName(&quot;UTF-8&quot;)-&gt;toUnicode(data);break;
+        case Utf16: tmpData&#x3D; QTextCodec::codecForName(&quot;UTF-16&quot;)-&gt;toUnicode(data);break;
+        case GBK: tmpData&#x3D; QTextCodec::codecForName(&quot;GBK&quot;)-&gt;toUnicode(data);break;
+        case Big5: tmpData&#x3D; QTextCodec::codecForName(&quot;Big5&quot;)-&gt;toUnicode(data);break;
+        case ShiftJIS: tmpData&#x3D; QTextCodec::codecForName(&quot;Shift-JIS&quot;)-&gt;toUnicode(data);break;
+        default:;break;
+    &#125;
+    return tmpData.toUtf8(); &#x2F;&#x2F;设置成Unicode格式
+&#125;
+</code></pre>
+
+<blockquote>
+<p>这里主要用到了QTextCodec这个类，具体内容可以看Qt的帮助文档，这里只简要概括。</p>
+<blockquote>
+<p> 1.需要包含**#include <QTextCodec>**这个头文件。</p>
+<p> 2.QTextCodec 类主要是将数据用来在非 Unicode 格式和 Unicode 之间进行转换。</p>
+</blockquote>
+</blockquote>
+<p>至此，QtSerialPort配置完成。</p>
+<h2 id="3-线程类对象的添加和UI界面的参数设置"><a href="#3-线程类对象的添加和UI界面的参数设置" class="headerlink" title="3.线程类对象的添加和UI界面的参数设置"></a>3.线程类对象的添加和UI界面的参数设置</h2><h3 id="添加任务类对象和线程类对象"><a href="#添加任务类对象和线程类对象" class="headerlink" title="添加任务类对象和线程类对象"></a>添加任务类对象和线程类对象</h3><p>打开工程，选择<strong>mainwidget.h</strong>，添加我们创建的类<strong>Serial</strong>和线程类<strong>QThread</strong>。</p>
+<p>内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">#ifndef MAINWIDGET_H
+#define MAINWIDGET_H
+
+#include &lt;QWidget&gt;
+#include &quot;serial.h&quot;  &#x2F;&#x2F;添加自定义类serial头文件
+#include &lt;QThread&gt;   &#x2F;&#x2F;添加线程类QThread头文件
+
+QT_BEGIN_NAMESPACE
+namespace Ui &#123; class MainWidget; &#125;
+QT_END_NAMESPACE
+
+class MainWidget : public QWidget
+&#123;
+    Q_OBJECT
+
+public:
+    MainWidget(QWidget *parent &#x3D; nullptr);
+    ~MainWidget();
+    QThread *t1;    &#x2F;&#x2F;1.创建子线程对象
+    Serial *m_work; &#x2F;&#x2F;2.创建任务类对象
+    
+private:
+    Ui::MainWidget *ui;
+
+&#125;;
+#endif &#x2F;&#x2F; MAINWIDGET_H
+</code></pre>
+
+<p>在<strong>mainwidget.cpp</strong>中将创建的对象实例化，并将任务函数移入子线程。</p>
+<p>内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">#include &quot;mainwidget.h&quot;
+#include &quot;ui_mainwidget.h&quot;
+
+MainWidget::MainWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::MainWidget)
+&#123;
+    ui-&gt;setupUi(this);
+    
+    &#x2F;&#x2F;1.创建子线程对象，动态分配空间，指定父对象
+    t1 &#x3D; new QThread(this);
+    &#x2F;&#x2F;2.创建任务类对象,动态分配空间，不能指定父对象
+    m_work &#x3D; new Serial;&#x2F;&#x2F;防止内存泄漏,关闭窗口时 delete m_work;
+    &#x2F;&#x2F;3.将任务对象移动到某个子线程中
+    m_work-&gt;moveToThread(t1);
+    
+&#125;
+
+MainWidget::~MainWidget()
+&#123;
+    delete ui;
+    delete m_work;  &#x2F;&#x2F;关闭时释放内存空间
+&#125;</code></pre>
+
+<blockquote>
+<p>注：这里线程操作参考之前的文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39538318/article/details/120398160">Qt多线程的使用记录</a>中的方式二。</p>
+</blockquote>
+<h3 id="初始化ui界面参数"><a href="#初始化ui界面参数" class="headerlink" title="初始化ui界面参数"></a>初始化ui界面参数</h3><p>在开始工作前需要初始化ui界面的参数，如设置QCombobox的下拉框内容。因此需要创建一个<strong>void initUI(void)</strong>;函数。打开<strong>mainwidget.h</strong>，添加我们需要创建的函数，并使用快捷键<kbd>alt</kbd>+<kbd>enter</kbd>，在<strong>mainwidget.cpp</strong>中定义<strong>void initUI(void)</strong>;函数。</p>
+<p>设置内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">public:
+    MainWidget(QWidget *parent &#x3D; nullptr);
+    ~MainWidget();
+    QThread *t1;    &#x2F;&#x2F;1.创建子线程对象
+    Serial *m_work; &#x2F;&#x2F;2.创建任务类对象
+    void initUI();  &#x2F;&#x2F;初始化UI界面参数，如设置QCombobox的item和设置QSS样式。</code></pre>
+
+<p>其中 <strong>void initUI();</strong> 函数内容如下。</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void MainWidget::initUI()
+&#123;
+     QStringList baudrateList; &#x2F;&#x2F;设置波特率列表
+     baudrateList&lt;&lt;&quot;1200&quot;&lt;&lt;&quot;2400&quot;&lt;&lt;&quot;4800&quot;&lt;&lt;&quot;9600&quot;&lt;&lt;&quot;19200&quot;&lt;&lt;&quot;38400&quot;
+                &lt;&lt;&quot;57600&quot;&lt;&lt;&quot;115200&quot;;
+     ui-&gt;comBaudRate-&gt;addItems(baudrateList); &#x2F;&#x2F;将设置的Item加入到列表中
+     ui-&gt;comBaudRate-&gt;setEditable(true); &#x2F;&#x2F;设置可以手动输入波特率
+     &#x2F;&#x2F;限定波特率手动输入时只能输入数字且范围为(0, 1000000)即最高1M
+     isBaudRateRange&#x3D; new QIntValidator; &#x2F;&#x2F;防止内存泄漏,关闭窗口时 delete aIntValidator;
+     isBaudRateRange-&gt;setRange(0, 1000000);
+     ui-&gt;comBaudRate-&gt;setValidator(isBaudRateRange);
+     ui-&gt;comBaudRate-&gt;setCurrentIndex(3);  &#x2F;&#x2F;设置默认显示第4个即9600(从0开始)
+
+     QStringList databitsList; &#x2F;&#x2F;设置数据位列表，根据串口中配置顺序设置。
+     databitsList&lt;&lt;&quot;5&quot;&lt;&lt;&quot;6&quot;&lt;&lt;&quot;7&quot;&lt;&lt;&quot;8&quot;;
+     ui-&gt;comDataBits-&gt;addItems(databitsList); &#x2F;&#x2F;将设置的Item加入到列表中
+     ui-&gt;comDataBits-&gt;setCurrentIndex(3);  &#x2F;&#x2F;设置默认显示第4个即8bit(从0开始)
+
+     QStringList parityList; &#x2F;&#x2F;设置校验位列表，根据串口中配置顺序设置。
+     parityList&lt;&lt;&quot;Even&quot;&lt;&lt;&quot;Mark&quot;&lt;&lt;&quot;None&quot;&lt;&lt;&quot;Odd&quot;&lt;&lt;&quot;Space&quot;;
+     ui-&gt;comParity-&gt;addItems(parityList); &#x2F;&#x2F;将设置的Item加入到列表中
+     ui-&gt;comParity-&gt;setCurrentIndex(2);  &#x2F;&#x2F;设置默认显示第3个即None(从0开始)
+
+     QStringList stopbitsList; &#x2F;&#x2F;设置停止位列表，根据串口中配置顺序设置。
+     stopbitsList&lt;&lt;&quot;1&quot;&lt;&lt;&quot;1.5&quot;&lt;&lt;&quot;2&quot;;
+     ui-&gt;comStopBits-&gt;addItems(stopbitsList); &#x2F;&#x2F;将设置的Item加入到列表中
+     ui-&gt;comStopBits-&gt;setCurrentIndex(0);  &#x2F;&#x2F;设置默认显示第1个即1bit(从0开始)
+
+     QStringList encodeList; &#x2F;&#x2F;设置编码格式列表，根据编码格式中配置顺序设置。
+     encodeList&lt;&lt;&quot;ASCII&quot;&lt;&lt;&quot;UTF8&quot;&lt;&lt;&quot;UTF16&quot;&lt;&lt;&quot;GBK&quot;&lt;&lt;&quot;Big5&quot;&lt;&lt;&quot;ShiftJIS&quot;;
+     ui-&gt;comEncode-&gt;addItems(encodeList); &#x2F;&#x2F;将设置的Item加入到列表中
+     ui-&gt;comEncode-&gt;setCurrentIndex(0);  &#x2F;&#x2F;设置默认显示第1个即ASCII(从0开始)
+
+&#125;</code></pre>
+
+<blockquote>
+<p>注：</p>
+<ol>
+<li>其中需要在<strong>mainwidget.h</strong>中添加   <strong>#include &lt; QStringList &gt;</strong> ;</li>
+<li>配置的<strong>item</strong>参数需要同之前<strong>switch</strong>设置的参数顺序相同。</li>
+<li>要在<strong>mainwidget.h</strong>中添加   <strong>#include &lt; QIntValidator &gt;</strong>;并创建一个私有成员，<em><em>QIntValidator</em> isBaudRateRange;</em>*</li>
+</ol>
+</blockquote>
+<p>设置完成后在<strong>MainWidget</strong>中运行 <strong>initUI();</strong> 函数</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">MainWidget::MainWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::MainWidget)
+&#123;
+    ui-&gt;setupUi(this);
+
+    &#x2F;&#x2F;0.初始化ui界面;
+    initUI();
+    &#x2F;&#x2F;1.创建子线程对象，动态分配空间，指定父对象
+    t1 &#x3D; new QThread(this);
+    &#x2F;&#x2F;2.创建任务类对象,动态分配空间，不能指定父对象
+    m_work &#x3D; new Serial;&#x2F;&#x2F;防止内存泄漏,关闭窗口时 delete m_work;
+    &#x2F;&#x2F;3.将任务对象移动到某个子线程中
+    m_work-&gt;moveToThread(t1);
+
+&#125;</code></pre>
+
+<p>至此，<strong>QCombobox</strong> 参数初始化完成。(后期仍会在 <strong>initUI()</strong> 中进行其他配置如设置QSS样式等)。</p>
+<h3 id="利用QSerialPortInfo得到串口号"><a href="#利用QSerialPortInfo得到串口号" class="headerlink" title="利用QSerialPortInfo得到串口号"></a>利用QSerialPortInfo得到串口号</h3><p>这里我们会发现并没有设置串口的<strong>Item</strong>参数。主要原因是，电脑再识别设备的串口号时，会任意分配可用的端口号，因此这里我们通过使用<strong>QSerialPortInfo</strong>类来得到可用端口号，并设置到串口的<strong>Item</strong>中。</p>
+<p>首先，打开<strong>mainwidget.h</strong>，添加**#include <QSerialPortInfo >** , 然后创建 <strong>void getportInfo();</strong> 函数，并使用快捷键<kbd>alt</kbd>+<kbd>enter</kbd>，在<strong>mainwidget.cpp</strong> 中定义 <strong>void getportInfo();</strong> 函数。</p>
+<p><strong>实现步骤：</strong></p>
+<blockquote>
+<p>首先检测可用的设备端口号，当存在可用的端口号时，通过遍历的方式，将可用的端口号保存在<strong>portStringList</strong>中。然后设置到串口的<strong>Item</strong>中。无可用端口号时，弹出信号框。</p>
+</blockquote>
+<p>具体内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void MainWidget::getportInfo()
+&#123;
+    qint32 comCnt&#x3D;0; &#x2F;&#x2F;保存当前可用的串口数量
+    QStringList portStringList; &#x2F;&#x2F;保存当前可用的串口列表
+
+    if(portStringList.length()!&#x3D;0) 
+    &#123;
+      portStringList.clear();&#x2F;&#x2F;检测portStringList内容当不为空时清除再次调用时使用
+    &#125; 
+    if(ui-&gt;comPortName-&gt;count()!&#x3D;0)
+    &#123;
+        ui-&gt;comPortName-&gt;clear();&#x2F;&#x2F;检测comPortName的列表数量当不为空时清除再次调用时使用
+    &#125;
+    &#x2F;&#x2F;获取串口设备数量
+    comCnt &#x3D; QSerialPortInfo::availablePorts().length();
+    if(comCnt!&#x3D;0)
+    &#123;
+       &#x2F;&#x2F;获取串口信息
+       foreach (const QSerialPortInfo &amp;qspinfo, QSerialPortInfo::availablePorts())
+       &#123;
+            portStringList+&#x3D;qspinfo.portName();
+       &#125;
+       ui-&gt;comPortName-&gt;addItems(portStringList);
+    &#125;
+    else&#123;   
+        message(&quot;未检测到串口!&quot;);
+        &#125;
+&#125;</code></pre>
+
+<blockquote>
+<p>注：</p>
+<ol>
+<li>其中message();为自己重新封装的信号框函数，具体内容见下。</li>
+</ol>
+</blockquote>
+<p>打开mainwidget.h，添加 #include &lt; QMessageBox &gt; , 然后重新封装函数 void message(const char <em>str); ，并使用快捷键<kbd>alt</kbd>+<kbd>enter</kbd>，在*<em>mainwidget.cpp</em></em> 中定义 void message(const char *str);函数。</p>
+<p>具体内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void MainWidget::message(const char *str)
+&#123;
+    QMessageBox msgBox;
+    msgBox.setText(QString::fromLocal8Bit(str));
+    msgBox.exec();
+&#125;</code></pre>
+
+<p>然后在<strong>MainWidget</strong>中运行 <strong>getportInfo();</strong> 函数</p>
+<p>这里要注意,在拔插串口设备时，可用的端口号会产生变化，但 <strong>getportInfo();</strong> 函数仅在打开程序时运行一次，因此，这里需要增加更新端口号的方法。</p>
+<p>实现方法：</p>
+<blockquote>
+<ol>
+<li>添加检测拔插设备的函数，当设备变化时重新运行<strong>getportInfo();</strong></li>
+<li>使用定时器，设定每100ms检测一次，当设备变化时重新运行<strong>getportInfo();</strong></li>
+<li>增加按钮，当点击按钮时重新运行<strong>getportInfo();</strong></li>
+</ol>
+</blockquote>
+<p>这里选择增加按钮的方法，主要原因是简单且不占用资源。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f60192b5c5.png" alt="image-20211028233127314" loading="lazy"></p>
+<p>增加按钮的信号与槽，当点击按钮时，重新运行<strong>getportInfo();</strong></p>
+<p>具体内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">MainWidget::MainWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::MainWidget)
+&#123;
+    ui-&gt;setupUi(this);
+
+    &#x2F;&#x2F;0.初始化ui界面;配置qss样式
+    initUI();
+    &#x2F;&#x2F;1.创建子线程对象，动态分配空间，指定父对象
+    t1 &#x3D; new QThread(this);
+    &#x2F;&#x2F;2.创建任务类对象,动态分配空间，不能指定父对象
+    m_work &#x3D; new Serial;&#x2F;&#x2F;防止内存泄漏,关闭窗口时 delete m_work;
+    &#x2F;&#x2F;3.将任务对象移动到某个子线程中
+    m_work-&gt;moveToThread(t1);
+    &#x2F;&#x2F;4.获取串口设备信息
+    getportInfo();
+        &#x2F;&#x2F;添加更新按钮信号与槽，用于更新串口设备信息
+        connect(ui-&gt;upBtn,&amp;QPushButton::clicked,this,&amp;MainWidget::getportInfo);
+
+&#125;</code></pre>
+
+<p>至此，利用<strong>QSerialPortInfo</strong>得到串口号完成。</p>
+<h2 id="4-配置UI界面的串口打开和关闭"><a href="#4-配置UI界面的串口打开和关闭" class="headerlink" title="4.配置UI界面的串口打开和关闭"></a>4.配置UI界面的串口打开和关闭</h2><h3 id="设置串口参数配置数组"><a href="#设置串口参数配置数组" class="headerlink" title="设置串口参数配置数组"></a>设置串口参数配置数组</h3><p>从之前的<strong>Serial</strong>配置可知，我们是通过配置<strong>ui</strong>界面的<strong>QCombobox</strong>来进行串口参数的配置的，因此想要配置的参数应用到<strong>Serial</strong>，需要设置结构体，通过信号与槽来传递结构体的值，来传递配置参数。</p>
+<p>这里需要在<strong>mainwidget.h</strong>中添加**#include “SerialInfo.h”<strong>头文件，并添加一个私有成员</strong>info**。</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">private:
+    Ui::MainWidget *ui;
+    QIntValidator* isBaudRateRange;&#x2F;&#x2F;设置波特率输入范围
+    Sinfo *info&#x3D;nullptr; &#x2F;&#x2F;设置串口配置的参数</code></pre>
+
+<blockquote>
+<p>注：</p>
+<ol>
+<li>Sinfo *info可以见之前配置的内容。</li>
+</ol>
+</blockquote>
+<p>在<strong>mainwidget.h</strong>中创建**void getComboBoxInfo();**用以获取配置参数。</p>
+<p>具体内容如下:</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void MainWidget::getComboBoxInfo()
+&#123;
+    if(info!&#x3D;nullptr)   &#x2F;&#x2F;删除原先内存空间
+    &#123;
+        delete info;
+    &#125;
+    this-&gt;info &#x3D; new Sinfo;&#x2F;&#x2F;防止内存泄漏,关闭窗口时 delete info;
+    this-&gt;info-&gt;comName&#x3D;ui-&gt;comPortName-&gt;currentText();  &#x2F;&#x2F;设置串口号
+    this-&gt;info-&gt;baudRate&#x3D;ui-&gt;comBaudRate-&gt;currentText().toInt();  &#x2F;&#x2F;设置波特率
+    this-&gt;info-&gt;dataBits&#x3D;ui-&gt;comDataBits-&gt;currentIndex();  &#x2F;&#x2F;设置数据位
+    this-&gt;info-&gt;parity&#x3D;ui-&gt;comParity-&gt;currentIndex();      &#x2F;&#x2F;设置检验位
+    this-&gt;info-&gt;stopBits&#x3D;ui-&gt;comStopBits-&gt;currentIndex();  &#x2F;&#x2F;设置停止位
+    this-&gt;info-&gt;flowControl&#x3D;0 ;                           &#x2F;&#x2F;设置流控位，默认值为0无流控
+    this-&gt;info-&gt;Encode&#x3D;ui-&gt;comEncode-&gt;currentIndex();      &#x2F;&#x2F;设置编码格式
+    
+&#125;</code></pre>
+
+<blockquote>
+<p>注：</p>
+<ol>
+<li>其中，<strong>info</strong>在退出时要<strong>delete</strong>。</li>
+</ol>
+</blockquote>
+<p>设置完参数时，记得放进<strong>MainWidget</strong>中执行。但MainWidget中之在打开程序时执行一次，因此，需要添加信号与槽来更新info的参数。由于使用的是<strong>QCombobox</strong>，查阅帮助文档可知，能用到的信号函数为**currentIndexChanged();**。</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f601e4ea99.gif" loading="lazy"></p>
+<p>具体内容：</p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/655f6023c6f7c.png" loading="lazy"></p>
+<p>从截图中我们可以看出，当<strong>QCombobox</strong>的<strong>index</strong>变化时，可以返回两种参数：一种是当前所选变化的<strong>index</strong>值，另一种是当前所选变化的<strong>text</strong>的值。</p>
+<p>因此可以在<strong>mainwidget.h</strong>中创建**void updataComboBox();**用以更新配置参数。</p>
+<p>具体内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">void MainWidget::updataComboBox()
+&#123;
+    connect(ui-&gt;comPortName, QOverload&lt;const QString &amp;&gt;::of(&amp;QComboBox::currentIndexChanged),
+        this,[&#x3D;](const QString &amp;text)&#123;
+        &#x2F;* ... *&#x2F;
+        this-&gt;info-&gt;comName&#x3D;text;  &#x2F;&#x2F;设置串口号
+     &#125;);
+    connect(ui-&gt;comBaudRate, QOverload&lt;const QString &amp;&gt;::of(&amp;QComboBox::currentIndexChanged),
+        this,[&#x3D;](const QString &amp;text)&#123;
+        &#x2F;* ... *&#x2F;
+        this-&gt;info-&gt;baudRate&#x3D;text.toInt();  &#x2F;&#x2F;设置串口波特率
+     &#125;);
+    connect(ui-&gt;comDataBits, QOverload&lt;int&gt;::of(&amp;QComboBox::currentIndexChanged),
+        this,[&#x3D;](int index)&#123;
+        &#x2F;* ... *&#x2F;
+        this-&gt;info-&gt;dataBits&#x3D;index;  &#x2F;&#x2F;设置串口数据位
+     &#125;);
+    connect(ui-&gt;comParity, QOverload&lt;int&gt;::of(&amp;QComboBox::currentIndexChanged),
+        this,[&#x3D;](int index)&#123;
+        &#x2F;* ... *&#x2F;
+        this-&gt;info-&gt;parity&#x3D;index;  &#x2F;&#x2F;设置串口校验位
+    &#125;);
+    connect(ui-&gt;comStopBits, QOverload&lt;int&gt;::of(&amp;QComboBox::currentIndexChanged),
+        this,[&#x3D;](int index)&#123;
+        &#x2F;* ... *&#x2F;
+        this-&gt;info-&gt;stopBits&#x3D;index;  &#x2F;&#x2F;设置串口停止位
+    &#125;);
+    connect(ui-&gt;comEncode, QOverload&lt;int&gt;::of(&amp;QComboBox::currentIndexChanged),
+        this,[&#x3D;](int index)&#123;
+        &#x2F;* ... *&#x2F;
+        this-&gt;info-&gt;Encode&#x3D;index;  &#x2F;&#x2F;设置串口编码格式
+    &#125;);
+&#x2F;**预留流控控制**&#x2F;
+&#x2F;&#x2F;    connect(ui-&gt;comFlowControl, QOverload&lt;int&gt;::of(&amp;QComboBox::currentIndexChanged),
+&#x2F;&#x2F;        this,[&#x3D;](int index)&#123;
+&#x2F;&#x2F;        &#x2F;* ... *&#x2F;
+&#x2F;&#x2F;        this-&gt;info-&gt;flowControl&#x3D;index;  &#x2F;&#x2F;设置串口流控位
+&#x2F;&#x2F;    &#125;);
+&#125;</code></pre>
+
+<p>至此，设置串口参数配置数组完成。</p>
+<h3 id="设置打开串口和关闭串口按钮"><a href="#设置打开串口和关闭串口按钮" class="headerlink" title="设置打开串口和关闭串口按钮"></a>设置打开串口和关闭串口按钮</h3><p><img src="https://img.daitcc.top:8090/i/2023/11/655f60285cf0e.png" loading="lazy"></p>
+<p>通过设置的ui界面可知，我们仅设置了一个按钮，因此想通过一个按钮去触发打开和关闭串口时就需要添加别的条件，这里可以使用两种解决方法。</p>
+<blockquote>
+<ol>
+<li>设置按钮的文字，通过判断文字来判断当前所处的状态。（**setText()**函数）</li>
+<li>设置按钮的状态，通过判断按钮状态来判断当前所处的状态。（**setChecked()**函数）</li>
+</ol>
+</blockquote>
+<p>这里我们使用**setText()**的方法。</p>
+<p>在<strong>mainwidget.h</strong>中创建**void SerialOpen();<strong>和</strong>void SerialClose();**用以打开和关闭串口。同时创建发送配置，打开和关闭串口信号。</p>
+<p>内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">public:
+    void SerialOpen();  &#x2F;&#x2F;打开串口函数
+    void SerialClose(); &#x2F;&#x2F;关闭串口函数
+signals:
+    void SendSerialConfig(Sinfo *info);  &#x2F;&#x2F;发送串口配置信号
+    void isCloseSerial();             &#x2F;&#x2F;发送关闭串口信号
+    void isOpenSerial();              &#x2F;&#x2F;发送打开串口信号</code></pre>
+
+<p>根据上述步骤，修改**SerialOpen();<strong>和</strong>SerialClose()**内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;打开串口设备
+void MainWidget::SerialOpen(void)
+&#123;
+    &#x2F;&#x2F;设置串口打开按钮文本样式
+     if(ui-&gt;OpenComBtn-&gt;text() &#x3D;&#x3D; QString::fromLocal8Bit(&quot;打开串口&quot;))&#123;
+         ui-&gt;OpenComBtn-&gt;setText(QString::fromLocal8Bit(&quot;关闭串口&quot;));
+         emit SendSerialConfig(info); &#x2F;&#x2F;发送串口配置信号
+         emit isOpenSerial();
+     &#125;
+     else&#123;
+         ui-&gt;OpenComBtn-&gt;setText(QString::fromLocal8Bit(&quot;打开串口&quot;));
+         this-&gt;SerialClose();   &#x2F;&#x2F;执行关闭串口设备
+     &#125;
+&#125;
+&#x2F;&#x2F;关闭串口设备
+void MainWidget::SerialClose(void)
+&#123;
+    emit isCloseSerial();
+&#125;</code></pre>
+
+<p>设置完<strong>SerialOpen();<strong>和</strong>SerialClose()<strong>后，记得放进</strong>MainWidget</strong>中执行。</p>
+<p>具体内容如下：</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">MainWidget::MainWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::MainWidget)
+&#123;
+    ui-&gt;setupUi(this);
+
+    &#x2F;&#x2F;0.初始化ui界面;配置qss样式
+    initUI();
+    &#x2F;&#x2F;1.创建子线程对象，动态分配空间，指定父对象
+    t1 &#x3D; new QThread(this);
+    &#x2F;&#x2F;2.创建任务类对象,动态分配空间，不能指定父对象
+    m_work &#x3D; new Serial;&#x2F;&#x2F;防止内存泄漏,关闭窗口时 delete m_work;
+    &#x2F;&#x2F;3.将任务对象移动到某个子线程中
+    m_work-&gt;moveToThread(t1);
+    &#x2F;&#x2F;4.获取串口设备信息
+    getportInfo();
+        &#x2F;&#x2F;添加更新按钮信号与槽，用于更新串口设备信息
+        connect(ui-&gt;upBtn,&amp;QPushButton::clicked,this,&amp;MainWidget::getportInfo);
+    &#x2F;&#x2F;5.获取串口参数配置数组
+    getComboBoxInfo();
+       &#x2F;&#x2F;添加串口参数数组的信号与槽，用于更新串口参数配置数组
+       updataComboBox();
+    &#x2F;&#x2F;6.打开线程并运行m_work的SerialOpen()和SerialClose()
+    connect(ui-&gt;OpenComBtn,&amp;QPushButton::clicked,this,[&#x3D;]&#123;
+            this-&gt;SerialOpen();
+            t1-&gt;start();
+        &#125;);
+        qRegisterMetaType&lt;Sinfo&gt;(&quot;Sinfo&quot;);
+        &#x2F;&#x2F;添加传递串口参数配置的信号与槽，用于传递串口参数配置
+        connect(this,&amp;MainWidget::SendSerialConfig,m_work,&amp;Serial::RecvSerialConfig);
+        &#x2F;&#x2F;添加打开串口的信号与槽，用于打开串口
+        connect(this,&amp;MainWidget::isOpenSerial,m_work,&amp;Serial::SerialOpen);
+        &#x2F;&#x2F;添加串口打开失败标志
+        connect(m_work,&amp;Serial::isnoSerialOpen,this,[&#x3D;]()&#123;
+            message(&quot;串口不存在，或被占用!&quot;);
+            ui-&gt;OpenComBtn-&gt;setText(QString::fromLocal8Bit(&quot;打开串口&quot;));
+        &#125;);
+        &#x2F;&#x2F;添加关闭串口的信号与槽，用于释放串口
+        connect(this,&amp;MainWidget::isCloseSerial,m_work,&amp;Serial::SerialClose);
+
+&#125;</code></pre>
+
+<blockquote>
+<p>注：</p>
+<ol>
+<li>传递串口参数结构体时，需要先声明。</li>
+</ol>
+</blockquote>
+<p>设置打开串口后，更新串口信息在ui界面上。</p>
+<p>添加相应的信号与槽，具体内容如下</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;7.从m_work处传递回来的Serialinfo显示在ui界面上
+connect(m_work,&amp;Serial::SetInfo,this,[&#x3D;](QString info)&#123;
+    ui-&gt;Info-&gt;setText(info);
+&#125;);</code></pre>
+
+<p>设置成功后，添加当串口关闭时，清除INFO的内容。因此需要在**SerialClose()**中添加以下内容。</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;关闭串口设备
+void MainWidget::SerialClose(void)
+&#123;
+    ui-&gt;Info-&gt;clear();  &#x2F;&#x2F;清空显示的配置参数
+    emit isCloseSerial(); &#x2F;&#x2F;发送关闭串口信号
+&#125;</code></pre>
+
+<p>至此，设置打开串口和关闭串口按钮完成。</p>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">我很可爱，请给我钱</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.yunyoujun.cn/img/donate/alipay-qrcode.jpg"><img loading="lazy" src="https://cdn.yunyoujun.cn/img/donate/alipay-qrcode.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.yunyoujun.cn/img/donate/wechatpay-qrcode.jpg"><img loading="lazy" src="https://cdn.yunyoujun.cn/img/donate/wechatpay-qrcode.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>DaiT</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://chenluntian.github.io/posts/e1c9b379" title="简单串口编写">https://chenluntian.github.io/posts/e1c9b379</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/posts/4ddba583" rel="next" title="pcigo-command设置lskypro"><span class="post-nav-text">pcigo-command设置lskypro</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">苏ICP备17038157号</a></div><div class="copyright"><span>&copy; 2016 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> DaiT</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script defer src="https://fastly.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script><script defer src="https://fastly.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script><script defer src="/js/search/algolia-search.js" type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"></div><div class="algolia-results"><div id="algolia-stats"></div><div id="algolia-hits"></div><div class="algolia-pagination" id="algolia-pagination"></div></div></div></body></html>

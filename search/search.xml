@@ -19,319 +19,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>pcigo-command设置lskypro</title>
-    <url>/posts/4ddba583.html</url>
-    <content><![CDATA[<h1 id="pcigo-command设置lskypro"><a href="#pcigo-command设置lskypro" class="headerlink" title="pcigo-command设置lskypro"></a>pcigo-command设置lskypro</h1><h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h2><h3 id="1-1-Curl的安装与配置"><a href="#1-1-Curl的安装与配置" class="headerlink" title="1.1 Curl的安装与配置"></a>1.1 Curl的安装与配置</h3><ul>
-<li>安装配置Curl<br> <a href="https://curl.se/download.html">Curl 下载地址</a></li>
-<li>解压</li>
-</ul>
-<p> 下载完成后，我解压到了这样一个目录</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D:\Compile_Tool\curl-8.4.0</code></pre>
-
-<ul>
-<li>配置环境变量</li>
-</ul>
-<p>新建一个环境变量</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">CURL_HOME
-D:\Compile_Tool\curl-8.4.0</code></pre>
-
-<p>然后Path中追加这个环境变量即可</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">%CURL_HOME%\bin\</code></pre>
-
-<h3 id="1-2-picgo的安装"><a href="#1-2-picgo的安装" class="headerlink" title="1.2 picgo的安装"></a>1.2 picgo的安装</h3><p><strong>文件—&gt;偏好的设置—&gt;图像—&gt;上传服务 PicGo-Core（command line）</strong></p>
-<p><img src="https://img.daitcc.top:8090/i/2023/11/6558fbf716d57.png" alt="image-20231118233605962" loading="lazy"></p>
-<h3 id="1-3-获取lsky的信息"><a href="#1-3-获取lsky的信息" class="headerlink" title="1.3 获取lsky的信息"></a>1.3 获取lsky的信息</h3><ul>
-<li>使用 cURL(<strong>推荐</strong>)获取认证 token 信息</li>
-</ul>
-<pre class="language-bash" data-language="bash"><code class="language-bash">curl -X POST -F &quot;email&#x3D;354769733@qq.com&quot; -F &quot;password&#x3D;wsj123wsj&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;tokens</code></pre>
-
-<blockquote>
-<p>提示：</p>
-<p>此命令仅适用于 V2，V1 用户只需要进入个人设置页面复制、粘贴使用即可。</p>
-</blockquote>
-<ul>
-<li>打开终端输入命令</li>
-</ul>
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;curl -X POST -F &quot;email&#x3D;354769733@qq.com&quot; -F &quot;password&#x3D;wsj123wsj&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;tokens
-&#123;&quot;status&quot;:true,&quot;message&quot;:&quot;success&quot;,&quot;data&quot;:&#123;&quot;token&quot;:&quot;1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot;&#125;&#125;</code></pre>
-<ul>
-<li>保存获取的<code>认证token信息</code></li>
-</ul>
-<pre class="language-bash" data-language="bash"><code class="language-bash">Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx</code></pre>
-
-<blockquote>
-<p>提示：</p>
-<p>通过设置请求 header 标头来验证请求(Bearer Token),所以<code>Bearer</code>不可少</p>
-</blockquote>
-<ul>
-<li>使用cURL(<strong>推荐</strong>)获取默认上传的相册ID</li>
-</ul>
-<pre class="language-bash" data-language="bash"><code class="language-bash">curl -H &quot;Authorization:Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot; -H &quot;Accept:application&#x2F;json&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums</code></pre>
-
-<blockquote>
-<p>提示：</p>
-<p>Authorization后面填刚保存的<code>认证token信息</code></p>
-</blockquote>
-<ul>
-<li>打开终端输入命令</li>
-</ul>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D:\Users\35476\Desktop&gt;curl -H &quot;Authorization:Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot; -H &quot;Accept:application&#x2F;json&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums
-&#123;&quot;status&quot;:true,&quot;message&quot;:&quot;success&quot;,&quot;data&quot;:&#123;&quot;current_page&quot;:1,&quot;data&quot;:[&#123;&quot;id&quot;:3,&quot;name&quot;:&quot;\u65c5\u6e38&quot;,&quot;intro&quot;:&quot;&quot;,&quot;image_num&quot;:0&#125;,&#123;&quot;id&quot;:2,&quot;name&quot;:&quot;\u65e5\u5e38&quot;,&quot;intro&quot;:&quot;&quot;,&quot;image_num&quot;:0&#125;,&#123;&quot;id&quot;:1,&quot;name&quot;:&quot;\u56fe\u5e8a&quot;,&quot;intro&quot;:&quot;&quot;,&quot;image_num&quot;:0&#125;],&quot;first_page_url&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums?page&#x3D;1&quot;,&quot;from&quot;:1,&quot;last_page&quot;:1,&quot;last_page_url&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums?page&#x3D;1&quot;,&quot;links&quot;:[&#123;&quot;url&quot;:null,&quot;label&quot;:&quot;&amp;laquo; \u4e0a\u4e00\u9875&quot;,&quot;active&quot;:false&#125;,&#123;&quot;url&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums?page&#x3D;1&quot;,&quot;label&quot;:&quot;1&quot;,&quot;active&quot;:true&#125;,&#123;&quot;url&quot;:null,&quot;label&quot;:&quot;\u4e0b\u4e00\u9875 &amp;raquo;&quot;,&quot;active&quot;:false&#125;],&quot;next_page_url&quot;:null,&quot;path&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums&quot;,&quot;per_page&quot;:40,&quot;prev_page_url&quot;:null,&quot;to&quot;:3,&quot;total&quot;:3&#125;&#125;</code></pre>
-
-<p>将返回的参数整理之后可得</p>
-<pre class="language-yaml" data-language="yaml"><code class="language-yaml">&#123;
-	&quot;status&quot;: true,
-	&quot;message&quot;: &quot;success&quot;,
-	&quot;data&quot;: &#123;
-		&quot;current_page&quot;: 1,
-		&quot;data&quot;: [
-			&#123;
-				&quot;id&quot;: 3,
-				&quot;name&quot;: &quot;旅游&quot;,
-				&quot;intro&quot;: &quot;&quot;,
-				&quot;image_num&quot;: 0
-			&#125;,
-			&#123;
-				&quot;id&quot;: 2,
-				&quot;name&quot;: &quot;日常&quot;,
-				&quot;intro&quot;: &quot;&quot;,
-				&quot;image_num&quot;: 0
-			&#125;,
-			&#123;
-				&quot;id&quot;: 1,
-				&quot;name&quot;: &quot;图床&quot;,
-				&quot;intro&quot;: &quot;&quot;,
-				&quot;image_num&quot;: 0
-			&#125;
-		],
-		&quot;first_page_url&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums?page&#x3D;1&quot;,
-		&quot;from&quot;: 1,
-		&quot;last_page&quot;: 1,
-		&quot;last_page_url&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums?page&#x3D;1&quot;,
-		&quot;links&quot;: [
-			&#123;
-				&quot;url&quot;: null,
-				&quot;label&quot;: &quot;&amp;laquo; 上一页&quot;,
-				&quot;active&quot;: false
-			&#125;,
-			&#123;
-				&quot;url&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums?page&#x3D;1&quot;,
-				&quot;label&quot;: &quot;1&quot;,
-				&quot;active&quot;: true
-			&#125;,
-			&#123;
-				&quot;url&quot;: null,
-				&quot;label&quot;: &quot;下一页 &amp;raquo;&quot;,
-				&quot;active&quot;: false
-			&#125;
-		],
-		&quot;next_page_url&quot;: null,
-		&quot;path&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums&quot;,
-		&quot;per_page&quot;: 40,
-		&quot;prev_page_url&quot;: null,
-		&quot;to&quot;: 3,
-		&quot;total&quot;: 3
-	&#125;
-&#125;</code></pre>
-
-<blockquote>
-<p>提示：</p>
-<p>返回参数 data.data.name 相册名称 需要经过Unicode转中文</p>
-<p>返回参数 data.data.id   相册自增 ID</p>
-</blockquote>
-<ul>
-<li>保存获取的<code>相册ID</code></li>
-</ul>
-<pre class="language-BASH" data-language="BASH"><code class="language-BASH">图床 1
-日常 2
-旅游 3</code></pre>
-
-
-
-<h2 id="2-修改lskypro源码可以指定默认上传相册"><a href="#2-修改lskypro源码可以指定默认上传相册" class="headerlink" title="2.修改lskypro源码可以指定默认上传相册"></a>2.修改lskypro源码可以指定默认上传相册</h2><ul>
-<li>修改文件&#x2F;app&#x2F;Services&#x2F;ImageService.php第139行：</li>
-</ul>
-<p>原代码为：</p>
-<pre class="language-php" data-language="php"><code class="language-php">&#x2F;&#x2F; 图片保存至默认相册(若有)
-            if ($albumId &#x3D; $user-&gt;configs-&gt;get(UserConfigKey::DefaultAlbum)) &#123;
-                if ($user-&gt;albums()-&gt;where(&#39;id&#39;, $albumId)-&gt;exists()) &#123;
-                    $image-&gt;album_id &#x3D; $albumId;
-                &#125;
-            &#125;</code></pre>
-
-<p>修改为：</p>
-<pre class="language-php" data-language="php"><code class="language-php">if ($request-&gt;has(&#39;album_id&#39;)) &#123;
-               $image-&gt;album_id &#x3D; $request-&gt;input(&#39;album_id&#39;);
-           &#125; else &#123;
-           &#x2F;&#x2F; 图片保存至默认相册(若有)
-           if ($albumId &#x3D; $user-&gt;configs-&gt;get(UserConfigKey::DefaultAlbum)) &#123;
-               if ($user-&gt;albums()-&gt;where(&#39;id&#39;, $albumId)-&gt;exists()) &#123;
-                   $image-&gt;album_id &#x3D; $albumId;
-               &#125;
-           &#125;
-       &#125;</code></pre>
-
-<h2 id="3-安装lsky图床插件"><a href="#3-安装lsky图床插件" class="headerlink" title="3. 安装lsky图床插件"></a>3. 安装lsky图床插件</h2><ul>
-<li><p>lsky图床插件</p>
-<p><a href="https://www.npmjs.com/package/picgo-plugin-lankong?activeTab=readme">官方地址</a></p>
-</li>
-<li><p>安装方式<br>在对应系统的<code>PicGo</code>程序配置文件路径下执行 <code>npm i picgo-plugin-lankong</code>，然后重启应用即可。</p>
-</li>
-</ul>
-<h2 id="4-修改配置文件"><a href="#4-修改配置文件" class="headerlink" title="4. 修改配置文件"></a>4. 修改配置文件</h2><p>这一步需要找到第1.2步中下载的<code>picgo</code>二进制文件，不同系统文件名略有不同：</p>
-<ul>
-<li><code>windows</code>系统一般在<code>C:\Users\用户名\AppData\Roaming\Typora\picgo\win64\</code>文件夹，文件名为<code>picgo.exe</code>；</li>
-<li><code>linux</code>系统一般在<code>~/.config/Typora/picgo/linux/</code>文件夹，文件名为<code>picgo</code>；</li>
-</ul>
-<p><strong>接下来执行命令：</strong></p>
-<ul>
-<li><p><code>linux</code>系统，打开终端，在<code>home</code>目录下执行<code>./.config/Typora/picgo/linux/picgo install gitee-uploader</code>；</p>
-</li>
-<li><p><code>windows</code>系统，打开终端，可以在包含<code>picgo.exe</code>文件的路径下执行<code>.\picgo.exe install picgo-plugin-lankong</code>；</p>
-</li>
-</ul>
-<p>在终端中打开你的<code>picgo.exe</code>路径，你可以通过<code>picgo -h</code>来查看所有命令：</p>
-  <pre class="language-bash" data-language="bash"><code class="language-bash">$ picgo -h
-
-  Usage: picgo [options] [command]
-
-  Options:
-
-    -v, --version                 output the version number
-    -d, --debug                   debug mode
-    -s, --silent                  silent mode
-    -c, --config &lt;path&gt;           set config path
-    -h, --help                    output usage information
-
-  Commands:
-
-    install|add [options] &lt;plugins...&gt;   install picgo plugin
-    uninstall|rm &lt;plugins...&gt;            uninstall picgo plugin
-    update [options] &lt;plugins...&gt;        update picgo plugin
-    set|config &lt;module&gt; [name]           configure config of picgo modules
-    upload|u [input...]                  upload, go go go
-    use [module]                         use modules of picgo
-    init [options] &lt;template&gt; [project]  create picgo plugin&#39;s development templates
-    i18n [lang]                          change picgo language
-    help [command]                       display help for command</code></pre>
-
-<blockquote>
-<p> <strong>提示</strong></p>
-<p>其中，命令选项如果是用<code>&lt;&gt;</code>包围起来的为必须输入项，如果是用<code>[]</code>包围起来的则为可选输入项。 有些命令支持简写，比如<code>picgo upload</code>可以写为<code>picgo u</code>。</p>
-</blockquote>
-<p>使用<code>use</code>命令为<code>picgo</code>选择<code>lsky</code>图床</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
-? Use an uploader (Use arrow keys)
-&gt; lankong
-  smms
-  tcyun
-  github
-  qiniu
-  imgur
-  aliyun
-(Move up and down to reveal more choices)</code></pre>
-
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
-? Use an uploader lankong
-? Use a transformer (Use arrow keys)
-&gt; path
-  base64</code></pre>
-
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
-? Use an uploader lankong
-? Use a transformer path
-? Use plugins (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)
-&gt;(*) picgo-plugin-lankong</code></pre>
-
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
-? Use an uploader lankong
-? Use a transformer path
-? Use plugins (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)picgo-plugin-lankong
-[PicGo SUCCESS]: Configure config successfully!</code></pre>
-
-<p>picgo 需要配置文件来启动。当你未指定配置文件的时候，picgo 将会使用默认配置文件来启动。</p>
-<h3 id="自动生成"><a href="#自动生成" class="headerlink" title="自动生成"></a>自动生成</h3><p><strong>通常来说你只需要配置 <code>Uploader</code> 即可，所以你可以通过 <code>picgo set uploader</code> 来进入交互式命令行，</strong></p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
-? Choose a(n) uploader (Use arrow keys)
-&gt; lankong
-  smms
-  tcyun
-  github
-  qiniu
-  imgur
-  aliyun
-(Move up and down to reveal more choices)</code></pre>
-
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
-? Choose a(n) uploader lankong
-? Choose a version (Use arrow keys)
-  V1
-&gt; V2</code></pre>
-
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
-? Choose a(n) uploader lankong
-? Choose a version V2
-? 示例: https:&#x2F;&#x2F;example.com https:&#x2F;&#x2F;img.daitcc.top:8090</code></pre>
-
-<p>这里的<code>认证 token 信息</code>为第<code>1.3节</code>保存的token值</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
-? Choose a(n) uploader lankong
-? Choose a version V2
-? 示例: https:&#x2F;&#x2F;example.com www.daitcc.top:8089
-? 认证 token 信息 Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx</code></pre>
-
-<p>这里<code>albumId</code>为第<code>1.3节</code>保存的<code>相册ID</code> (选择需要默认上传的 这里我选择的是 图床)</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
-? Choose a(n) uploader lankong
-? Choose a version V2
-? 示例: https:&#x2F;&#x2F;example.com www.daitcc.top:8089
-? 认证 token 信息 Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx
-? 选填, V1以及V2使用默认存储策略时请留空 1
-? 选填, V2生效 1</code></pre>
-
-<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
-? Choose a(n) uploader lankong
-? Choose a version V2
-? 示例: https:&#x2F;&#x2F;example.com www.daitcc.top:8089
-? 认证 token 信息 Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx
-? 选填, V1以及V2使用默认存储策略时请留空 1
-? 选填, V2生效 1
-? set permission private(default)
-? 是否忽略证书错误, 如果上传失败提示证书过期请设为true No
-? 是否同步删除, 只支持V2 No
-[PicGo SUCCESS]: Configure config successfully</code></pre>
-
-<h3 id="默认配置文件"><a href="#默认配置文件" class="headerlink" title="默认配置文件"></a>默认配置文件</h3><p>picgo 的默认配置文件为<code>~/.picgo/config.json</code>。其中<code>~</code>为用户目录。不同系统的用户目录不太一样。</p>
-<p>linux 和 macOS 均为<code>~/.picgo/config.json</code>。</p>
-<p>windows 则为<code>C:\Users\你的用户名\.picgo\config.json</code>。</p>
-<p>可以用<code>写字板</code>打开</p>
-<p>可以参考如下配置：</p>
-<pre class="language-yaml" data-language="yaml"><code class="language-yaml">&#123;
-  &quot;picBed&quot;: &#123;
-    &quot;uploader&quot;: &quot;lankong&quot;,
-    &quot;current&quot;: &quot;lankong&quot;,
-    &quot;lankong&quot;: &#123;
-      &quot;lskyProVersion&quot;: &quot;V2&quot;,
-      &quot;server&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&quot;,
-      &quot;token&quot;: &quot;Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot;,
-      &quot;strategyId&quot;: &quot;1&quot;,
-      &quot;albumId&quot;: &quot;1&quot;,
-      &quot;permission&quot;: 0,
-      &quot;ignoreCertErr&quot;: false,
-      &quot;syncDelete&quot;: false
-    &#125;,
-    &quot;transformer&quot;: &quot;path&quot;
-  &#125;,
-  &quot;picgoPlugins&quot;: &#123;
-    &quot;picgo-plugin-lankong&quot;: true
-  &#125;
-&#125;</code></pre>
-
-<h2 id="5-验证上传"><a href="#5-验证上传" class="headerlink" title="5.验证上传"></a>5.验证上传</h2><p><img src="https://img.daitcc.top:8090/i/2023/11/6558fbe5ea2c0.png" alt="image-20231119014836303" loading="lazy"></p>
-<p><img src="https://img.daitcc.top:8090/i/2023/11/6558fbded18a3.png" alt="image-20231119015652256" loading="lazy"></p>
-]]></content>
-  </entry>
-  <entry>
     <title>简单串口编写</title>
     <url>/posts/e1c9b379.html</url>
     <content><![CDATA[<h1 id="简单串口编写"><a href="#简单串口编写" class="headerlink" title="简单串口编写"></a>简单串口编写</h1><h2 id="1-ui-界面的创建"><a href="#1-ui-界面的创建" class="headerlink" title="1.ui 界面的创建"></a>1.ui 界面的创建</h2><p>打开<strong>Qt</strong>新建一个工程</p>
@@ -1210,6 +897,319 @@ void MainWidget::SerialClose(void)
 &#125;</code></pre>
 
 <p>至此，设置打开串口和关闭串口按钮完成。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>pcigo-command设置lskypro</title>
+    <url>/posts/4ddba583.html</url>
+    <content><![CDATA[<h1 id="pcigo-command设置lskypro"><a href="#pcigo-command设置lskypro" class="headerlink" title="pcigo-command设置lskypro"></a>pcigo-command设置lskypro</h1><h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h2><h3 id="1-1-Curl的安装与配置"><a href="#1-1-Curl的安装与配置" class="headerlink" title="1.1 Curl的安装与配置"></a>1.1 Curl的安装与配置</h3><ul>
+<li>安装配置Curl<br> <a href="https://curl.se/download.html">Curl 下载地址</a></li>
+<li>解压</li>
+</ul>
+<p> 下载完成后，我解压到了这样一个目录</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">D:\Compile_Tool\curl-8.4.0</code></pre>
+
+<ul>
+<li>配置环境变量</li>
+</ul>
+<p>新建一个环境变量</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">CURL_HOME
+D:\Compile_Tool\curl-8.4.0</code></pre>
+
+<p>然后Path中追加这个环境变量即可</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">%CURL_HOME%\bin\</code></pre>
+
+<h3 id="1-2-picgo的安装"><a href="#1-2-picgo的安装" class="headerlink" title="1.2 picgo的安装"></a>1.2 picgo的安装</h3><p><strong>文件—&gt;偏好的设置—&gt;图像—&gt;上传服务 PicGo-Core（command line）</strong></p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/6558fbf716d57.png" alt="image-20231118233605962" loading="lazy"></p>
+<h3 id="1-3-获取lsky的信息"><a href="#1-3-获取lsky的信息" class="headerlink" title="1.3 获取lsky的信息"></a>1.3 获取lsky的信息</h3><ul>
+<li>使用 cURL(<strong>推荐</strong>)获取认证 token 信息</li>
+</ul>
+<pre class="language-bash" data-language="bash"><code class="language-bash">curl -X POST -F &quot;email&#x3D;354769733@qq.com&quot; -F &quot;password&#x3D;wsj123wsj&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;tokens</code></pre>
+
+<blockquote>
+<p>提示：</p>
+<p>此命令仅适用于 V2，V1 用户只需要进入个人设置页面复制、粘贴使用即可。</p>
+</blockquote>
+<ul>
+<li>打开终端输入命令</li>
+</ul>
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;curl -X POST -F &quot;email&#x3D;354769733@qq.com&quot; -F &quot;password&#x3D;wsj123wsj&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;tokens
+&#123;&quot;status&quot;:true,&quot;message&quot;:&quot;success&quot;,&quot;data&quot;:&#123;&quot;token&quot;:&quot;1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot;&#125;&#125;</code></pre>
+<ul>
+<li>保存获取的<code>认证token信息</code></li>
+</ul>
+<pre class="language-bash" data-language="bash"><code class="language-bash">Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx</code></pre>
+
+<blockquote>
+<p>提示：</p>
+<p>通过设置请求 header 标头来验证请求(Bearer Token),所以<code>Bearer</code>不可少</p>
+</blockquote>
+<ul>
+<li>使用cURL(<strong>推荐</strong>)获取默认上传的相册ID</li>
+</ul>
+<pre class="language-bash" data-language="bash"><code class="language-bash">curl -H &quot;Authorization:Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot; -H &quot;Accept:application&#x2F;json&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums</code></pre>
+
+<blockquote>
+<p>提示：</p>
+<p>Authorization后面填刚保存的<code>认证token信息</code></p>
+</blockquote>
+<ul>
+<li>打开终端输入命令</li>
+</ul>
+<pre class="language-bash" data-language="bash"><code class="language-bash">D:\Users\35476\Desktop&gt;curl -H &quot;Authorization:Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot; -H &quot;Accept:application&#x2F;json&quot; https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums
+&#123;&quot;status&quot;:true,&quot;message&quot;:&quot;success&quot;,&quot;data&quot;:&#123;&quot;current_page&quot;:1,&quot;data&quot;:[&#123;&quot;id&quot;:3,&quot;name&quot;:&quot;\u65c5\u6e38&quot;,&quot;intro&quot;:&quot;&quot;,&quot;image_num&quot;:0&#125;,&#123;&quot;id&quot;:2,&quot;name&quot;:&quot;\u65e5\u5e38&quot;,&quot;intro&quot;:&quot;&quot;,&quot;image_num&quot;:0&#125;,&#123;&quot;id&quot;:1,&quot;name&quot;:&quot;\u56fe\u5e8a&quot;,&quot;intro&quot;:&quot;&quot;,&quot;image_num&quot;:0&#125;],&quot;first_page_url&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums?page&#x3D;1&quot;,&quot;from&quot;:1,&quot;last_page&quot;:1,&quot;last_page_url&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums?page&#x3D;1&quot;,&quot;links&quot;:[&#123;&quot;url&quot;:null,&quot;label&quot;:&quot;&amp;laquo; \u4e0a\u4e00\u9875&quot;,&quot;active&quot;:false&#125;,&#123;&quot;url&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums?page&#x3D;1&quot;,&quot;label&quot;:&quot;1&quot;,&quot;active&quot;:true&#125;,&#123;&quot;url&quot;:null,&quot;label&quot;:&quot;\u4e0b\u4e00\u9875 &amp;raquo;&quot;,&quot;active&quot;:false&#125;],&quot;next_page_url&quot;:null,&quot;path&quot;:&quot;http:\&#x2F;\&#x2F;www.daitcc.top:8089\&#x2F;api\&#x2F;v1\&#x2F;albums&quot;,&quot;per_page&quot;:40,&quot;prev_page_url&quot;:null,&quot;to&quot;:3,&quot;total&quot;:3&#125;&#125;</code></pre>
+
+<p>将返回的参数整理之后可得</p>
+<pre class="language-yaml" data-language="yaml"><code class="language-yaml">&#123;
+	&quot;status&quot;: true,
+	&quot;message&quot;: &quot;success&quot;,
+	&quot;data&quot;: &#123;
+		&quot;current_page&quot;: 1,
+		&quot;data&quot;: [
+			&#123;
+				&quot;id&quot;: 3,
+				&quot;name&quot;: &quot;旅游&quot;,
+				&quot;intro&quot;: &quot;&quot;,
+				&quot;image_num&quot;: 0
+			&#125;,
+			&#123;
+				&quot;id&quot;: 2,
+				&quot;name&quot;: &quot;日常&quot;,
+				&quot;intro&quot;: &quot;&quot;,
+				&quot;image_num&quot;: 0
+			&#125;,
+			&#123;
+				&quot;id&quot;: 1,
+				&quot;name&quot;: &quot;图床&quot;,
+				&quot;intro&quot;: &quot;&quot;,
+				&quot;image_num&quot;: 0
+			&#125;
+		],
+		&quot;first_page_url&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums?page&#x3D;1&quot;,
+		&quot;from&quot;: 1,
+		&quot;last_page&quot;: 1,
+		&quot;last_page_url&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums?page&#x3D;1&quot;,
+		&quot;links&quot;: [
+			&#123;
+				&quot;url&quot;: null,
+				&quot;label&quot;: &quot;&amp;laquo; 上一页&quot;,
+				&quot;active&quot;: false
+			&#125;,
+			&#123;
+				&quot;url&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums?page&#x3D;1&quot;,
+				&quot;label&quot;: &quot;1&quot;,
+				&quot;active&quot;: true
+			&#125;,
+			&#123;
+				&quot;url&quot;: null,
+				&quot;label&quot;: &quot;下一页 &amp;raquo;&quot;,
+				&quot;active&quot;: false
+			&#125;
+		],
+		&quot;next_page_url&quot;: null,
+		&quot;path&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&#x2F;api&#x2F;v1&#x2F;albums&quot;,
+		&quot;per_page&quot;: 40,
+		&quot;prev_page_url&quot;: null,
+		&quot;to&quot;: 3,
+		&quot;total&quot;: 3
+	&#125;
+&#125;</code></pre>
+
+<blockquote>
+<p>提示：</p>
+<p>返回参数 data.data.name 相册名称 需要经过Unicode转中文</p>
+<p>返回参数 data.data.id   相册自增 ID</p>
+</blockquote>
+<ul>
+<li>保存获取的<code>相册ID</code></li>
+</ul>
+<pre class="language-BASH" data-language="BASH"><code class="language-BASH">图床 1
+日常 2
+旅游 3</code></pre>
+
+
+
+<h2 id="2-修改lskypro源码可以指定默认上传相册"><a href="#2-修改lskypro源码可以指定默认上传相册" class="headerlink" title="2.修改lskypro源码可以指定默认上传相册"></a>2.修改lskypro源码可以指定默认上传相册</h2><ul>
+<li>修改文件&#x2F;app&#x2F;Services&#x2F;ImageService.php第139行：</li>
+</ul>
+<p>原代码为：</p>
+<pre class="language-php" data-language="php"><code class="language-php">&#x2F;&#x2F; 图片保存至默认相册(若有)
+            if ($albumId &#x3D; $user-&gt;configs-&gt;get(UserConfigKey::DefaultAlbum)) &#123;
+                if ($user-&gt;albums()-&gt;where(&#39;id&#39;, $albumId)-&gt;exists()) &#123;
+                    $image-&gt;album_id &#x3D; $albumId;
+                &#125;
+            &#125;</code></pre>
+
+<p>修改为：</p>
+<pre class="language-php" data-language="php"><code class="language-php">if ($request-&gt;has(&#39;album_id&#39;)) &#123;
+               $image-&gt;album_id &#x3D; $request-&gt;input(&#39;album_id&#39;);
+           &#125; else &#123;
+           &#x2F;&#x2F; 图片保存至默认相册(若有)
+           if ($albumId &#x3D; $user-&gt;configs-&gt;get(UserConfigKey::DefaultAlbum)) &#123;
+               if ($user-&gt;albums()-&gt;where(&#39;id&#39;, $albumId)-&gt;exists()) &#123;
+                   $image-&gt;album_id &#x3D; $albumId;
+               &#125;
+           &#125;
+       &#125;</code></pre>
+
+<h2 id="3-安装lsky图床插件"><a href="#3-安装lsky图床插件" class="headerlink" title="3. 安装lsky图床插件"></a>3. 安装lsky图床插件</h2><ul>
+<li><p>lsky图床插件</p>
+<p><a href="https://www.npmjs.com/package/picgo-plugin-lankong?activeTab=readme">官方地址</a></p>
+</li>
+<li><p>安装方式<br>在对应系统的<code>PicGo</code>程序配置文件路径下执行 <code>npm i picgo-plugin-lankong</code>，然后重启应用即可。</p>
+</li>
+</ul>
+<h2 id="4-修改配置文件"><a href="#4-修改配置文件" class="headerlink" title="4. 修改配置文件"></a>4. 修改配置文件</h2><p>这一步需要找到第1.2步中下载的<code>picgo</code>二进制文件，不同系统文件名略有不同：</p>
+<ul>
+<li><code>windows</code>系统一般在<code>C:\Users\用户名\AppData\Roaming\Typora\picgo\win64\</code>文件夹，文件名为<code>picgo.exe</code>；</li>
+<li><code>linux</code>系统一般在<code>~/.config/Typora/picgo/linux/</code>文件夹，文件名为<code>picgo</code>；</li>
+</ul>
+<p><strong>接下来执行命令：</strong></p>
+<ul>
+<li><p><code>linux</code>系统，打开终端，在<code>home</code>目录下执行<code>./.config/Typora/picgo/linux/picgo install gitee-uploader</code>；</p>
+</li>
+<li><p><code>windows</code>系统，打开终端，可以在包含<code>picgo.exe</code>文件的路径下执行<code>.\picgo.exe install picgo-plugin-lankong</code>；</p>
+</li>
+</ul>
+<p>在终端中打开你的<code>picgo.exe</code>路径，你可以通过<code>picgo -h</code>来查看所有命令：</p>
+  <pre class="language-bash" data-language="bash"><code class="language-bash">$ picgo -h
+
+  Usage: picgo [options] [command]
+
+  Options:
+
+    -v, --version                 output the version number
+    -d, --debug                   debug mode
+    -s, --silent                  silent mode
+    -c, --config &lt;path&gt;           set config path
+    -h, --help                    output usage information
+
+  Commands:
+
+    install|add [options] &lt;plugins...&gt;   install picgo plugin
+    uninstall|rm &lt;plugins...&gt;            uninstall picgo plugin
+    update [options] &lt;plugins...&gt;        update picgo plugin
+    set|config &lt;module&gt; [name]           configure config of picgo modules
+    upload|u [input...]                  upload, go go go
+    use [module]                         use modules of picgo
+    init [options] &lt;template&gt; [project]  create picgo plugin&#39;s development templates
+    i18n [lang]                          change picgo language
+    help [command]                       display help for command</code></pre>
+
+<blockquote>
+<p> <strong>提示</strong></p>
+<p>其中，命令选项如果是用<code>&lt;&gt;</code>包围起来的为必须输入项，如果是用<code>[]</code>包围起来的则为可选输入项。 有些命令支持简写，比如<code>picgo upload</code>可以写为<code>picgo u</code>。</p>
+</blockquote>
+<p>使用<code>use</code>命令为<code>picgo</code>选择<code>lsky</code>图床</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
+? Use an uploader (Use arrow keys)
+&gt; lankong
+  smms
+  tcyun
+  github
+  qiniu
+  imgur
+  aliyun
+(Move up and down to reveal more choices)</code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
+? Use an uploader lankong
+? Use a transformer (Use arrow keys)
+&gt; path
+  base64</code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
+? Use an uploader lankong
+? Use a transformer path
+? Use plugins (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)
+&gt;(*) picgo-plugin-lankong</code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo use
+? Use an uploader lankong
+? Use a transformer path
+? Use plugins (Press &lt;space&gt; to select, &lt;a&gt; to toggle all, &lt;i&gt; to invert selection)picgo-plugin-lankong
+[PicGo SUCCESS]: Configure config successfully!</code></pre>
+
+<p>picgo 需要配置文件来启动。当你未指定配置文件的时候，picgo 将会使用默认配置文件来启动。</p>
+<h3 id="自动生成"><a href="#自动生成" class="headerlink" title="自动生成"></a>自动生成</h3><p><strong>通常来说你只需要配置 <code>Uploader</code> 即可，所以你可以通过 <code>picgo set uploader</code> 来进入交互式命令行，</strong></p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
+? Choose a(n) uploader (Use arrow keys)
+&gt; lankong
+  smms
+  tcyun
+  github
+  qiniu
+  imgur
+  aliyun
+(Move up and down to reveal more choices)</code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
+? Choose a(n) uploader lankong
+? Choose a version (Use arrow keys)
+  V1
+&gt; V2</code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
+? Choose a(n) uploader lankong
+? Choose a version V2
+? 示例: https:&#x2F;&#x2F;example.com https:&#x2F;&#x2F;img.daitcc.top:8090</code></pre>
+
+<p>这里的<code>认证 token 信息</code>为第<code>1.3节</code>保存的token值</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
+? Choose a(n) uploader lankong
+? Choose a version V2
+? 示例: https:&#x2F;&#x2F;example.com www.daitcc.top:8089
+? 认证 token 信息 Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx</code></pre>
+
+<p>这里<code>albumId</code>为第<code>1.3节</code>保存的<code>相册ID</code> (选择需要默认上传的 这里我选择的是 图床)</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
+? Choose a(n) uploader lankong
+? Choose a version V2
+? 示例: https:&#x2F;&#x2F;example.com www.daitcc.top:8089
+? 认证 token 信息 Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx
+? 选填, V1以及V2使用默认存储策略时请留空 1
+? 选填, V2生效 1</code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash">C:\Users\35476\AppData\Roaming\Typora\picgo\win64&gt;picgo set uploader
+? Choose a(n) uploader lankong
+? Choose a version V2
+? 示例: https:&#x2F;&#x2F;example.com www.daitcc.top:8089
+? 认证 token 信息 Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx
+? 选填, V1以及V2使用默认存储策略时请留空 1
+? 选填, V2生效 1
+? set permission private(default)
+? 是否忽略证书错误, 如果上传失败提示证书过期请设为true No
+? 是否同步删除, 只支持V2 No
+[PicGo SUCCESS]: Configure config successfully</code></pre>
+
+<h3 id="默认配置文件"><a href="#默认配置文件" class="headerlink" title="默认配置文件"></a>默认配置文件</h3><p>picgo 的默认配置文件为<code>~/.picgo/config.json</code>。其中<code>~</code>为用户目录。不同系统的用户目录不太一样。</p>
+<p>linux 和 macOS 均为<code>~/.picgo/config.json</code>。</p>
+<p>windows 则为<code>C:\Users\你的用户名\.picgo\config.json</code>。</p>
+<p>可以用<code>写字板</code>打开</p>
+<p>可以参考如下配置：</p>
+<pre class="language-yaml" data-language="yaml"><code class="language-yaml">&#123;
+  &quot;picBed&quot;: &#123;
+    &quot;uploader&quot;: &quot;lankong&quot;,
+    &quot;current&quot;: &quot;lankong&quot;,
+    &quot;lankong&quot;: &#123;
+      &quot;lskyProVersion&quot;: &quot;V2&quot;,
+      &quot;server&quot;: &quot;https:&#x2F;&#x2F;img.daitcc.top:8090&quot;,
+      &quot;token&quot;: &quot;Bearer 1|ykngSEREfC7uM2yID8liqidRImfZSwJDIpmLlQPx&quot;,
+      &quot;strategyId&quot;: &quot;1&quot;,
+      &quot;albumId&quot;: &quot;1&quot;,
+      &quot;permission&quot;: 0,
+      &quot;ignoreCertErr&quot;: false,
+      &quot;syncDelete&quot;: false
+    &#125;,
+    &quot;transformer&quot;: &quot;path&quot;
+  &#125;,
+  &quot;picgoPlugins&quot;: &#123;
+    &quot;picgo-plugin-lankong&quot;: true
+  &#125;
+&#125;</code></pre>
+
+<h2 id="5-验证上传"><a href="#5-验证上传" class="headerlink" title="5.验证上传"></a>5.验证上传</h2><p><img src="https://img.daitcc.top:8090/i/2023/11/6558fbe5ea2c0.png" alt="image-20231119014836303" loading="lazy"></p>
+<p><img src="https://img.daitcc.top:8090/i/2023/11/6558fbded18a3.png" alt="image-20231119015652256" loading="lazy"></p>
 ]]></content>
   </entry>
 </search>
